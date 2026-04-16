@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"allowJs": false,
+		"module": "NodeNext",
+		"target": "ES2023",
+    "moduleResolution": "NodeNext",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "outDir": "dist"
+	},
+  "include": [
+    "src",
+    "src/.d.ts"
+  ],
+	"exclude": [
+		"node_modules",
+    "build",
+	]
+}
