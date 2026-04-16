@@ -5,9 +5,6 @@
   "description": "",
   "license": "",
   "private": "true",
-  "engines": {
-    "node": ">=24.15.0"
-  },
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
