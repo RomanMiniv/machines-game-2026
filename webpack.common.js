@@ -1,3 +1,4 @@
+const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 /**
@@ -7,11 +8,14 @@ module.exports = {
   entry: "./src/index.ts",
   resolve: {
     extensions: [".ts", "..."],
+    alias: {
+      "@assets": path.resolve(__dirname, "assets")
+    }
   },
   module: {
     rules: [
       {
-        test: /\.(png|svg|jpg|jpeg|gif|avif|json)$/i,
+        test: /\.(png|svg|jpg|jpeg|gif|avif)$/i,
         type: "asset/resource",
         generator: {
           filename: "[name][ext]",

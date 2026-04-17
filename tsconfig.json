@@ -9,7 +9,10 @@
     "strictPropertyInitialization": false,
     "resolveJsonModule": true,
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
+    "paths": {
+      "@assets/*": ["./assets/*"],
+    }
 	},
   "include": [
     "src",

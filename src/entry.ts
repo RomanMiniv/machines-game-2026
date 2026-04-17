@@ -1,5 +1,9 @@
 import Phaser from "phaser";
-import TestScene from "./scenes/TestScene/TestScene";
+import { TestScene } from "./scenes/TestScene/TestScene";
+import { Boot } from "./scenes/Boot";
+import { Preload } from "./scenes/Preload";
+import { MainMenu } from "./scenes/MainMenu";
+import { Game } from "./scenes/Game";
 
 const parent = document.getElementById("root") as HTMLDivElement;
 
@@ -14,7 +18,7 @@ const config: Phaser.Types.Core.GameConfig = {
   },
   disableContextMenu: true,
   type: Phaser.AUTO,
-  scene: [TestScene],
+  scene: [Boot, Preload, MainMenu, Game, TestScene],
 };
 
 const game = new Phaser.Game(config);
