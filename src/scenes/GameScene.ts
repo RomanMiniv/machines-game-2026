@@ -1,15 +1,15 @@
 import { Scene } from "phaser";
 
-export class MainMenu extends Scene {
+export class GameScene extends Scene {
   constructor() {
     super({
-      key: "MainMenu"
+      key: "Game"
     });
   }
 
   create() {
     const { width: cWidth, height: cHeight } = this.game.scale;
-    this.add.text(cWidth / 2, cHeight / 2, "Main Menu", {
+    this.add.text(cWidth / 2, cHeight / 2, "Game", {
       fontSize: 36
     }).setOrigin(.5);
   }

@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import gearURL from "@assets/images/gear.svg";
 
-export class Boot extends Scene {
+export class BootScene extends Scene {
   constructor() {
     super({
       key: "Boot",

@@ -12,7 +12,8 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "phaser": "^4.0.0"
+    "phaser": "^4.0.0",
+    "phaser4-rex-plugins": "^4.0.5"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.10.0",

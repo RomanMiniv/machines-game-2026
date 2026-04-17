@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import { LoaderUI } from "../components/LoaderUI";
 
-export class Preload extends Scene {
+export class PreloadScene extends Scene {
   constructor() {
     super({
       key: "Preload"
@@ -22,6 +22,6 @@ export class Preload extends Scene {
   }
 
   create() {
-    this.scene.start("MainMenu");
+    this.scene.start("MenuScene");
   }
 }

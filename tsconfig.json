@@ -16,7 +16,8 @@
 	},
   "include": [
     "src",
-    "src/.d.ts"
+    "types/image.d.ts",
+    "types/phaser-plugin.d.ts"
   ],
 	"exclude": [
 		"node_modules",

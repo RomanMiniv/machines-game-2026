@@ -1,9 +1,10 @@
 import Phaser from "phaser";
+import RexUIPlugin from "phaser4-rex-plugins/templates/ui/ui-plugin.js";
 import { TestScene } from "./scenes/TestScene/TestScene";
-import { Boot } from "./scenes/Boot";
-import { Preload } from "./scenes/Preload";
-import { MainMenu } from "./scenes/MainMenu";
-import { Game } from "./scenes/Game";
+import { BootScene } from "./scenes/BootScene";
+import { PreloadScene } from "./scenes/PreloadScene";
+import { MenuScene } from "./scenes/MenuScene";
+import { GameScene } from "./scenes/GameScene";
 
 const parent = document.getElementById("root") as HTMLDivElement;
 
@@ -18,7 +19,16 @@ const config: Phaser.Types.Core.GameConfig = {
   },
   disableContextMenu: true,
   type: Phaser.AUTO,
-  scene: [Boot, Preload, MainMenu, Game, TestScene],
+  plugins: {
+    scene: [
+      {
+        key: "rexUI",
+        plugin: RexUIPlugin,
+        mapping: "rexUI"
+      }
+    ]
+  },
+  scene: [BootScene, PreloadScene, MenuScene, GameScene, TestScene],
 };
 
 const game = new Phaser.Game(config);
