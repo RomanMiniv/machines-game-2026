@@ -45,7 +45,7 @@ export class MenuUI {
   }
 
   private createButton(text: string): Label {
-    const bg = this.scene.add.rectangle(0, 0, 260, 60, 0x1e1e1e, 1);
+    const bg = this.scene.add.rectangle(0, 0, 390, 90, 0x1e1e1e, 1);
 
     const label = this.scene.rexUI.add.label({
       width: 390,
