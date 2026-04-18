@@ -12,5 +12,9 @@ export class OptionsScene extends Scene {
     this.add.text(cWidth / 2, cHeight / 2, "Options", {
       fontSize: 36
     }).setOrigin(.5);
+
+    this.input.once("pointerdown", () => {
+      this.scene.start("MenuScene");
+    });
   }
 }

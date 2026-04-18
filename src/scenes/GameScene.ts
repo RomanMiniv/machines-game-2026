@@ -12,5 +12,11 @@ export class GameScene extends Scene {
     this.add.text(cWidth / 2, cHeight / 2, "Game", {
       fontSize: 36
     }).setOrigin(.5);
+
+    this.input.once("pointerdown", () => {
+      this.scene.stop("GameScene");
+      this.scene.wake("LoreManagerScene");
+      this.events.emit("complete");
+    });
   }
 }
