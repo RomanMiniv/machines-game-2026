@@ -4,7 +4,7 @@ import gearURL from "@assets/images/gear.svg";
 export class BootScene extends Scene {
   constructor() {
     super({
-      key: "Boot",
+      key: "BootScene",
     });
   }
 
@@ -16,6 +16,6 @@ export class BootScene extends Scene {
   }
 
   create() {
-    this.scene.start("Preload");
+    this.scene.start("PreloadScene");
   }
 }

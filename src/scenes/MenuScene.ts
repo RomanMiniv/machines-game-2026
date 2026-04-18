@@ -15,15 +15,15 @@ export class MenuScene extends Scene {
       buttons: [
         {
           label: "PLAY",
-          onClick: () => this.scene.start("Game")
+          onClick: () => this.scene.start("GameScene")
         },
         {
           label: "OPTIONS",
-          onClick: () => console.error("Options")
+          onClick: () => this.scene.start("OptionsScene")
         },
         {
           label: "CREDITS",
-          onClick: () => console.error("Credits")
+          onClick: () => this.scene.start("CreditsScene")
         }
       ]
     });

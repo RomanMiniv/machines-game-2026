@@ -4,7 +4,7 @@ import { LoaderUI } from "../components/LoaderUI";
 export class PreloadScene extends Scene {
   constructor() {
     super({
-      key: "Preload"
+      key: "PreloadScene"
     });
   }
 

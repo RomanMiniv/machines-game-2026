@@ -5,6 +5,8 @@ import { BootScene } from "./scenes/BootScene";
 import { PreloadScene } from "./scenes/PreloadScene";
 import { MenuScene } from "./scenes/MenuScene";
 import { GameScene } from "./scenes/GameScene";
+import { CreditsScene } from "./scenes/CreditsScene";
+import { OptionsScene } from "./scenes/OptionsScene";
 
 const parent = document.getElementById("root") as HTMLDivElement;
 
@@ -28,7 +30,7 @@ const config: Phaser.Types.Core.GameConfig = {
       }
     ]
   },
-  scene: [BootScene, PreloadScene, MenuScene, GameScene, TestScene],
+  scene: [BootScene, PreloadScene, MenuScene, GameScene, OptionsScene, CreditsScene, TestScene],
 };
 
 const game = new Phaser.Game(config);

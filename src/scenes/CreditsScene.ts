@@ -1,15 +1,15 @@
 import { Scene } from "phaser";
 
-export class GameScene extends Scene {
+export class CreditsScene extends Scene {
   constructor() {
     super({
-      key: "GameScene"
+      key: "CreditsScene"
     });
   }
 
   create() {
     const { width: cWidth, height: cHeight } = this.game.scale;
-    this.add.text(cWidth / 2, cHeight / 2, "Game", {
+    this.add.text(cWidth / 2, cHeight / 2, "Credits", {
       fontSize: 36
     }).setOrigin(.5);
   }
