@@ -33,7 +33,7 @@ export class MenuUI {
     });
 
     this._config.buttons.forEach(btnConfig => {
-      const btn = this.createButton(btnConfig.label).on("pointerup", btnConfig.onClick);
+      const btn = this.createButton(btnConfig);
 
       this._buttons.push(btn);
       this._container!.add(btn);
@@ -44,7 +44,7 @@ export class MenuUI {
     this.animateIn(this._container);
   }
 
-  private createButton(text: string): Label {
+  private createButton({ label: text, onClick }: IMenuButton): Label {
     const bg = this.scene.add.rectangle(0, 0, 390, 90, 0x1e1e1e, 1);
 
     const label = this.scene.rexUI.add.label({
@@ -66,6 +66,8 @@ export class MenuUI {
 
     label.setInteractive();
 
+    let isDown: boolean;
+
     label.on("pointerover", () => {
       this.scene.tweens.add({
         targets: label,
@@ -79,6 +81,8 @@ export class MenuUI {
     });
 
     label.on("pointerout", () => {
+      isDown = false;
+
       this.scene.tweens.add({
         targets: label,
         scale: 0.95,
@@ -91,12 +95,23 @@ export class MenuUI {
     });
 
     label.on("pointerdown", () => {
+      isDown = true;
+
       this.scene.tweens.add({
         targets: label,
         scale: 0.9,
         duration: 80,
         yoyo: true
       });
+    });
+
+    label.on("pointerup", () => {
+      if (!isDown) {
+        return;
+      }
+      isDown = false;
+
+      onClick();
     });
 
     return label;
