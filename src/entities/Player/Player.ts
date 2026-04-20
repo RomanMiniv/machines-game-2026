@@ -1,4 +1,5 @@
 import { Scene, Physics, Input, Textures } from "phaser";
+import { Oil } from "./stuff/Oil";
 
 interface IInputControl {
   up: Input.Keyboard.Key;
@@ -15,6 +16,8 @@ export class Player extends Physics.Arcade.Image {
   private readonly _rotationFactor: number = .00004;
   private readonly _dragFactor: number = .01;
 
+  oil: Oil;
+
   constructor(scene: Scene, x: number, y: number, texture: string | Textures.Texture, frame?: string | number) {
     super(scene, x, y, texture, frame);
     scene.add.existing(this);
@@ -28,10 +31,17 @@ export class Player extends Physics.Arcade.Image {
       left: Input.Keyboard.KeyCodes.A,
       space: Input.Keyboard.KeyCodes.SPACE,
     }) as IInputControl;
+
+    this.initStuff();
+  }
+
+  initStuff(): void {
+    this.oil = new Oil();
   }
 
   update(time: number, delta: number) {
     this.move();
+    this.oil.update(time, delta);
   }
 
   move(): void {
@@ -63,9 +73,12 @@ export class Player extends Physics.Arcade.Image {
     }
 
     this.setAcceleration(vec.x, vec.y);
-    this.setMaxVelocity(this._velocity);
 
-    this.setDrag(this._dragFactor);
+    const oilFactor: number = this.oil.amount / 100;
+
+    this.setMaxVelocity(this._velocity * (.5 + .5 * oilFactor));
+
+    this.setDrag(this._dragFactor * (.5 + .5 * oilFactor));
     this.setDamping(true);
 
     const bodyVelocity = this.body?.velocity;
