@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { LoaderUI } from "../components/LoaderUI";
+import playerURL from "@assets/images/player.png";
 
 export class PreloadScene extends Scene {
   constructor() {
@@ -12,6 +13,8 @@ export class PreloadScene extends Scene {
     //  Load the assets for the game
 
     new LoaderUI(this).drawLoader();
+
+    this.load.image("player", playerURL);
 
     // TODO: delete mock data
     this.load.image("test1", "https://www.justpushstart.com/wp-content/uploads/2010/12/popww5.jpg");

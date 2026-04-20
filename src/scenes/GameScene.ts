@@ -1,9 +1,21 @@
 import { Scene } from "phaser";
+import { Player } from "../entities/Player";
 
 export class GameScene extends Scene {
+  player: Player;
+
   constructor() {
     super({
-      key: "GameScene"
+      key: "GameScene",
+      physics: {
+        default: "arcade",
+        arcade: {
+          gravity: {
+            x: 0,
+            y: 0,
+          },
+        }
+      },
     });
   }
 
@@ -18,5 +30,15 @@ export class GameScene extends Scene {
       this.scene.wake("LoreManagerScene");
       this.events.emit("complete");
     });
+
+    this.createPlayer();
+  }
+
+  createPlayer(): void {
+    this.player = new Player(this, 100, 400, "player");
+  }
+
+  update(time: number, delta: number): void {
+    this.player.update(time, delta);
   }
 }
