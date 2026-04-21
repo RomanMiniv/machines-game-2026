@@ -1,4 +1,4 @@
-import Phaser, { Physics, Scene, Textures } from "phaser";
+import Phaser from "phaser";
 
 export class Oil {
   private _amount: number = 100;
@@ -26,15 +26,5 @@ export class Oil {
 
   update(time: number, delta: number): void {
     this.amount -= this.drain.speed * (delta / this.drain.time);
-  }
-}
-
-export class OilPickup extends Physics.Arcade.Image {
-  amount: number = 20;
-
-  constructor(scene: Scene, x: number, y: number, texture: string | Textures.Texture, frame?: string | number) {
-    super(scene, x, y, texture, frame);
-    scene.add.existing(this);
-    scene.physics.add.existing(this, true);
   }
 }

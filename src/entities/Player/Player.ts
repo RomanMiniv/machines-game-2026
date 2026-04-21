@@ -9,8 +9,21 @@ interface IInputControl {
   space: Input.Keyboard.Key;
 }
 
+export enum EUpgradeType {
+  DEFAULT,
+  MAGNET,
+  ELECTROMAGNET,
+}
+
+interface IUpgradeState {
+  current: EUpgradeType;
+  textures: string[];
+}
+
 export class Player extends Physics.Arcade.Image {
   private _inputControl!: IInputControl;
+
+  private _upgradeState: IUpgradeState;
 
   private readonly _velocity: number = 1300;
   private readonly _rotationFactor: number = .00004;
@@ -24,6 +37,9 @@ export class Player extends Physics.Arcade.Image {
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
 
+    this.initUpgrade();
+    this.initStuff();
+
     this._inputControl = (this.scene.input.keyboard as Input.Keyboard.KeyboardPlugin).addKeys({
       up: Input.Keyboard.KeyCodes.W,
       right: Input.Keyboard.KeyCodes.D,
@@ -31,12 +47,61 @@ export class Player extends Physics.Arcade.Image {
       left: Input.Keyboard.KeyCodes.A,
       space: Input.Keyboard.KeyCodes.SPACE,
     }) as IInputControl;
+  }
 
-    this.initStuff();
+  initUpgrade(): void {
+    this._upgradeState = {
+      current: EUpgradeType.DEFAULT,
+      textures: ["playerGear", "plaerMagnetGear", "playerCoilMagnetGear"]
+    };
   }
 
   initStuff(): void {
     this.oil = new Oil();
+  }
+
+  async upgrade(upgradeType: EUpgradeType): Promise<void> {
+    // TODO: add animation to overlapped object? fly object to player for example
+    await new Promise<void>(resolve => {
+      const newTexture: string = this._upgradeState.textures[upgradeType];
+
+      const scene = this.scene;
+      const { x, y } = this;
+      const timeStep = 50;
+
+      scene.time.delayedCall(60, () => {
+        scene.cameras.main.shake(timeStep * 3, 0.004);
+
+        const shake = { t: 0 };
+
+        scene.tweens.add({
+          targets: shake,
+          t: 1,
+          duration: timeStep,
+          yoyo: true,
+          repeat: 4,
+          onUpdate: () => {
+            const strength = (1 - shake.t) * 10;
+
+            this.setPosition(
+              x + Phaser.Math.FloatBetween(-strength, strength),
+              y + Phaser.Math.FloatBetween(-strength, strength)
+            );
+          },
+          onComplete: () => {
+            this.setPosition(x, y);
+            resolve();
+          },
+          ease: "Sine.easeInOut"
+        });
+
+        scene.time.delayedCall(timeStep * 2, () => {
+          this.setTexture(newTexture);
+        });
+      });
+    });
+
+    this._upgradeState.current = upgradeType;
   }
 
   update(time: number, delta: number) {

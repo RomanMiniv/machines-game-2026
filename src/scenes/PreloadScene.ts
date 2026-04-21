@@ -1,7 +1,14 @@
 import { Scene } from "phaser";
+
 import { LoaderUI } from "../components/LoaderUI";
-import playerURL from "@assets/images/player.png";
-import oilURL from "@assets/images/oil.svg";
+
+import gearURL from "@assets/images/player/gear.png";
+import magnetGearURL from "@assets/images/player/magnetGear.png";
+import coilMagnetGearURL from "@assets/images/player/coilMagnetGear.png";
+
+import oilURL from "@assets/images/stuff/oil.png";
+import magnetURL from "@assets/images/stuff/magnet.png";
+import coilURL from "@assets/images/stuff/coil.png";
 
 export class PreloadScene extends Scene {
   constructor() {
@@ -15,15 +22,15 @@ export class PreloadScene extends Scene {
 
     new LoaderUI(this).drawLoader();
 
-    this.load.image("player", playerURL);
-    this.load.image("oil", oilURL);
+    // TODO: make sprites
 
-    // TODO: delete mock data
-    this.load.image("test1", "https://www.justpushstart.com/wp-content/uploads/2010/12/popww5.jpg");
-    this.load.image("test2", "https://princeofpersia.fandom.com/wiki/Prince_%28Sands_of_Time%29");
-    this.load.image("test3", "https://www.thegamer.com/prince-of-persia-the-sands-of-time-remake-trophy-achievement-list-leaked-again/");
-    this.load.image("test4", "https://d1lss44hh2trtw.cloudfront.net/assets/editorial/2023/05/prince-of-persia-remake.jpg");
-    this.load.image("test5", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvSkpTn1beylRbu3--foS8cgw5CEnBTpPYrw&s");
+    this.load.image("playerGear", gearURL);
+    this.load.image("plaerMagnetGear", magnetGearURL);
+    this.load.image("playerCoilMagnetGear", coilMagnetGearURL);
+
+    this.load.image("oil", oilURL);
+    this.load.image("magnet", magnetURL);
+    this.load.image("coil", coilURL);
   }
 
   create() {

@@ -1,10 +1,13 @@
 import { GameObjects, Physics, Scene } from "phaser";
-import { Player } from "../entities/Player/Player";
-import { OilPickup } from "../entities/Player/stuff/Oil";
+import { EUpgradeType, Player } from "../entities/Player/Player";
+import { OilPickup } from "../pickup/OilPickup";
+import { MagnetPickup } from "../pickup/MagnetPickup";
+import { CoilPickup } from "../pickup/CoilPickup";
 
 export class GameScene extends Scene {
   player: Player;
-  oilGroup: Physics.Arcade.StaticGroup;
+
+  oilPickupGroup: Physics.Arcade.StaticGroup;
 
   oilText: GameObjects.Text;
 
@@ -39,33 +42,45 @@ export class GameScene extends Scene {
     this.createPlayer();
     this.createOil();
 
-    this.createInfo();
-
-    this.physics.add.overlap(this.player, this.oilGroup, (player, oil) => {
-      this.player.oil.collect((oil as OilPickup).amount);
-      oil.destroy();
+    this.physics.add.overlap(this.player, this.oilPickupGroup, (player, obj) => {
+      this.player.oil.collect((obj as OilPickup).amount);
+      obj.destroy();
     });
+
+    const magnetPickup = new MagnetPickup(this, 500, 500);
+    this.physics.add.overlap(this.player, magnetPickup, async (player, obj) => {
+      obj.destroy();
+      await this.player.upgrade(EUpgradeType.MAGNET);
+    });
+
+    const coilPickup = new CoilPickup(this, 1000, 500);
+    this.physics.add.overlap(this.player, coilPickup, async (player, obj) => {
+      obj.destroy();
+      await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
+    });
+
+    this.createInfo();
+  }
+
+  createPlayer(): void {
+    this.player = new Player(this, 100, 400, "playerGear"); //TODO: move texture to class Player
   }
 
   createOil(): void {
-    this.oilGroup = this.physics.add.staticGroup({
+    this.oilPickupGroup = this.physics.add.staticGroup({
       classType: OilPickup,
     });
 
     for (let i = 1; i <= 2; i++) {
-      this.oilGroup.create(i * 400, 200, "oil").setTintMode(Phaser.TintModes.FILL);
+      this.oilPickupGroup.create(i * 400, 200);
     }
   }
 
   createInfo(): void {
-    this.oilText = this.add.text(10, 10, 'Oil: 100', {
-      font: '20px Arial',
-      color: '#ffffff'
+    this.oilText = this.add.text(10, 10, "Oil: 100", {
+      font: "20px Arial",
+      color: "#ffffff"
     });
-  }
-
-  createPlayer(): void {
-    this.player = new Player(this, 100, 400, "player");
   }
 
   update(time: number, delta: number): void {
