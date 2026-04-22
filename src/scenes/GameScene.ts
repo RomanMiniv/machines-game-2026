@@ -41,10 +41,15 @@ export class GameScene extends Scene {
       this.events.emit("complete");
     });
 
+    this.createBackground();
+
     this.createPlayer();
+    this.createCamera();
+
     this.createOil();
 
-    this.createGround();
+    this.createMap();
+
     this.physics.add.collider(this.player, this.groundGroup);
 
     this.physics.add.overlap(this.player, this.oilPickupGroup, (player, obj) => {
@@ -73,6 +78,12 @@ export class GameScene extends Scene {
     this.player = new Player(this, 100, 400, "playerGear"); //TODO: move texture to class Player
   }
 
+  createCamera(): void {
+    this.physics.world.setBounds(0, 0, 3840, 1080);
+    this.cameras.main.setBounds(0, 0, 3840, 1080);
+    this.cameras.main.startFollow(this.player, true, .06, 0);
+  }
+
   createOil(): void {
     this.oilPickupGroup = this.physics.add.staticGroup({
       classType: OilPickup,
@@ -81,6 +92,15 @@ export class GameScene extends Scene {
     for (let i = 1; i <= 2; i++) {
       this.oilPickupGroup.create(i * 400, 200);
     }
+  }
+
+  createBackground(): void {
+    this.add.image(0, 0, "backgroundSky").setOrigin(0, 0);
+    this.add.image(0, 0, "backgroundCity").setOrigin(0, 0);
+  }
+
+  createMap(): void {
+    this.createGround();
   }
 
   createGround(): void {

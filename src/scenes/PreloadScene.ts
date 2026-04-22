@@ -10,6 +10,8 @@ import oilURL from "@assets/images/stuff/oil.png";
 import magnetURL from "@assets/images/stuff/magnet.png";
 import coilURL from "@assets/images/stuff/coil.png";
 
+import backgroundSkyURL from "@assets/images/background/backgroundSky.png";
+import backgroundCityURL from "@assets/images/background/backgroundCity.png";
 import groundURL from "@assets/images/ground.jpg";
 
 export class PreloadScene extends Scene {
@@ -34,6 +36,9 @@ export class PreloadScene extends Scene {
     this.load.image("magnet", magnetURL);
     this.load.image("coil", coilURL);
 
+    this.load.image("backgroundSky", backgroundSkyURL);
+    this.load.image("backgroundCity", backgroundCityURL);
+    
     this.load.image("ground", groundURL);
   }
 
