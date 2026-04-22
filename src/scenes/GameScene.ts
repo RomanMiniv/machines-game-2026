@@ -1,11 +1,16 @@
 import { GameObjects, Physics, Scene, Types } from "phaser";
 import { EUpgradeType, Player } from "../entities/Player/Player";
-import { OilPickup } from "../pickup/OilPickup";
-import { MagnetPickup } from "../pickup/MagnetPickup";
-import { CoilPickup } from "../pickup/CoilPickup";
+import { OilPickup } from "../pickups/OilPickup";
+import { MagnetPickup } from "../pickups/MagnetPickup";
+import { CoilPickup } from "../pickups/CoilPickup";
+import { Robot } from "../entities/Robot/Robot";
+import { Drone } from "../entities/Drone/Drone";
 
 export class GameScene extends Scene {
   player: Player;
+
+  robotGroup: Physics.Arcade.Group;
+  droneGroup: Physics.Arcade.Group;
 
   groundGroup: Physics.Arcade.StaticGroup;
 
@@ -46,11 +51,24 @@ export class GameScene extends Scene {
     this.createPlayer();
     this.createCamera();
 
+    this.createRobots();
+    this.createDrones();
+
     this.createOil();
 
     this.createMap();
 
     this.physics.add.collider(this.player, this.groundGroup);
+
+    this.physics.add.collider(this.robotGroup, this.groundGroup);
+    this.physics.add.collider(this.player, this.robotGroup, (player, obj) => {
+      console.error("collider: player and robot");
+    });
+
+    this.physics.add.collider(this.droneGroup, this.groundGroup);
+    this.physics.add.collider(this.player, this.droneGroup, (player, obj) => {
+      console.error("collider: player and drone");
+    });
 
     this.physics.add.overlap(this.player, this.oilPickupGroup, (player, obj) => {
       this.player.oil.collect((obj as OilPickup).amount);
@@ -82,6 +100,28 @@ export class GameScene extends Scene {
     this.physics.world.setBounds(0, 0, 3840, 1080);
     this.cameras.main.setBounds(0, 0, 3840, 1080);
     this.cameras.main.startFollow(this.player, true, .06, 0);
+  }
+
+  createRobots(): void {
+    this.robotGroup = this.physics.add.group({
+      runChildUpdate: true,
+    });
+
+
+    for (let i = 1; i <= 2; i++) {
+      this.robotGroup.add(new Robot(this, i * 800, 500));
+    }
+  }
+
+  createDrones(): void {
+    this.droneGroup = this.physics.add.group({
+      runChildUpdate: true,
+    });
+
+
+    for (let i = 1; i <= 2; i++) {
+      this.droneGroup.add(new Drone(this, i * 800, 500));
+    }
   }
 
   createOil(): void {

@@ -1,0 +1,28 @@
+{"frames": [
+
+{
+	"filename": "robot_attack.png",
+	"frame": {"x":2,"y":2,"w":561,"h":539},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":561,"h":539},
+	"sourceSize": {"w":561,"h":539}
+},
+{
+	"filename": "robot_default.png",
+	"frame": {"x":565,"y":2,"w":400,"h":539},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":400,"h":539},
+	"sourceSize": {"w":400,"h":539}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "robot.png",
+	"format": "RGBA8888",
+	"size": {"w":967,"h":543},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a315a7b22ab7bf428f7160e504a2e3c6:6f6e316f70c55e284899569c49978ee9:a304e87a8f03f133e4f637a0c46d3aed$"
+}
+}

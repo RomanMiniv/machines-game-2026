@@ -2,13 +2,20 @@ import { Scene } from "phaser";
 
 import { LoaderUI } from "../components/LoaderUI";
 
-import gearURL from "@assets/images/player/gear.png";
-import magnetGearURL from "@assets/images/player/magnetGear.png";
-import coilMagnetGearURL from "@assets/images/player/coilMagnetGear.png";
+import gearURL from "@assets/images/entities/player/gear.png";
+import magnetGearURL from "@assets/images/entities/player/magnetGear.png";
+import coilMagnetGearURL from "@assets/images/entities/player/coilMagnetGear.png";
 
 import oilURL from "@assets/images/stuff/oil.png";
 import magnetURL from "@assets/images/stuff/magnet.png";
 import coilURL from "@assets/images/stuff/coil.png";
+
+import robotURL from "@assets/images/entities/robot/robot.png";
+import robotConfig from "@assets/images/entities/robot/robot.json";
+import beamURL from "@assets/images/stuff/beam.png";
+
+import droneURL from "@assets/images/entities/drone/drone.png";
+import droneConfig from "@assets/images/entities/drone/drone.json";
 
 import backgroundSkyURL from "@assets/images/background/backgroundSky.png";
 import backgroundCityURL from "@assets/images/background/backgroundCity.png";
@@ -31,6 +38,11 @@ export class PreloadScene extends Scene {
     this.load.image("playerGear", gearURL);
     this.load.image("plaerMagnetGear", magnetGearURL);
     this.load.image("playerCoilMagnetGear", coilMagnetGearURL);
+
+    this.load.atlas("robot", robotURL, robotConfig);
+    this.load.image("beam", beamURL);
+    
+    this.load.atlas("drone", droneURL, droneConfig);
 
     this.load.image("oil", oilURL);
     this.load.image("magnet", magnetURL);
