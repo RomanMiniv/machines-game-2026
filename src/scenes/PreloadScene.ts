@@ -10,6 +10,8 @@ import oilURL from "@assets/images/stuff/oil.png";
 import magnetURL from "@assets/images/stuff/magnet.png";
 import coilURL from "@assets/images/stuff/coil.png";
 
+import groundURL from "@assets/images/ground.jpg";
+
 export class PreloadScene extends Scene {
   constructor() {
     super({
@@ -31,6 +33,8 @@ export class PreloadScene extends Scene {
     this.load.image("oil", oilURL);
     this.load.image("magnet", magnetURL);
     this.load.image("coil", coilURL);
+
+    this.load.image("ground", groundURL);
   }
 
   create() {

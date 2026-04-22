@@ -29,6 +29,10 @@ export class Player extends Physics.Arcade.Image {
   private readonly _rotationFactor: number = .00004;
   private readonly _dragFactor: number = .01;
 
+  private readonly _jumpVelocity: number = -750;
+  private _wasGrounded: boolean = false;
+  private _prevVelocityY: number = 0;
+
   oil: Oil;
 
   constructor(scene: Scene, x: number, y: number, texture: string | Textures.Texture, frame?: string | number) {
@@ -41,9 +45,7 @@ export class Player extends Physics.Arcade.Image {
     this.initStuff();
 
     this._inputControl = (this.scene.input.keyboard as Input.Keyboard.KeyboardPlugin).addKeys({
-      up: Input.Keyboard.KeyCodes.W,
       right: Input.Keyboard.KeyCodes.D,
-      down: Input.Keyboard.KeyCodes.S,
       left: Input.Keyboard.KeyCodes.A,
       space: Input.Keyboard.KeyCodes.SPACE,
     }) as IInputControl;
@@ -70,7 +72,7 @@ export class Player extends Physics.Arcade.Image {
       const timeStep = 50;
 
       scene.time.delayedCall(60, () => {
-        scene.cameras.main.shake(timeStep * 3, 0.004);
+        scene.cameras.main.shake(timeStep * 3, .004);
 
         const shake = { t: 0 };
 
@@ -111,7 +113,6 @@ export class Player extends Physics.Arcade.Image {
 
   move(): void {
     let velocityHorizontalDirection: number = 0;
-    let velocityVerticalDirection: number = 0;
 
     if (this._inputControl.left.isDown) {
       velocityHorizontalDirection -= 1;
@@ -120,36 +121,61 @@ export class Player extends Physics.Arcade.Image {
       velocityHorizontalDirection += 1;
     }
 
-    if (this._inputControl.up.isDown) {
-      velocityVerticalDirection -= 1;
-    }
-    if (this._inputControl.down.isDown) {
-      velocityVerticalDirection += 1;
-    }
-
     const vx = velocityHorizontalDirection * this._velocity;
-    const vy = velocityVerticalDirection * this._velocity;
 
-    // Diagonal movement normalization
-    const vec = new Phaser.Math.Vector2(vx, vy);
+    const body = this.body as Phaser.Physics.Arcade.Body;
+    const isGrounded = body.blocked.down;
+    const isFalling = body.velocity.y > 0;
+    const isApex = !isGrounded && Math.abs(body.velocity.y) < 80;
 
-    if (vec.length() > 0) {
-      vec.normalize().scale(this._velocity);
+    if (this._inputControl.space.isDown && isGrounded) {
+      this.setVelocityY(this._jumpVelocity);
     }
 
-    this.setAcceleration(vec.x, vec.y);
+    // hang effect
+    let airControl = isGrounded ? 1 : .6;
+    if (isApex) {
+      airControl = 1.25;
+      this.setVelocityY(body.velocity.y * .85);
+    }
+
+    // move
+    this.setAccelerationX(vx * airControl);
 
     const oilFactor: number = this.oil.amount / 100;
 
     this.setMaxVelocity(this._velocity * (.5 + .5 * oilFactor));
 
-    this.setDrag(this._dragFactor * (.5 + .5 * oilFactor));
+    this.setDragX(this._dragFactor * (.5 + .5 * oilFactor) * airControl);
     this.setDamping(true);
 
+    // falling
+    if (isFalling) {
+      const MAX_FALL_SPEED = 1400;
+      this.setVelocityY(
+        Math.min(body.velocity.y * 1.2, MAX_FALL_SPEED)
+      );
+    }
+
+    // bounce
+    const justLanded = isGrounded && !this._wasGrounded;
+    if (justLanded) {
+      const fallSpeed = this._prevVelocityY;
+
+      if (fallSpeed > 200) {
+        const bounce = Math.min(fallSpeed * .2, 200);
+        this.setVelocityY(-bounce);
+      }
+    }
+
+    // rotation
     const bodyVelocity = this.body?.velocity;
     if (bodyVelocity?.length() && bodyVelocity?.length() > .1) {
       const direction = Math.sign(bodyVelocity.x) || -Math.sign(bodyVelocity.y);
       this.rotation += bodyVelocity.length() * direction * this._rotationFactor;
     }
+
+    this._prevVelocityY = body.velocity.y;
+    this._wasGrounded = isGrounded;
   }
 }

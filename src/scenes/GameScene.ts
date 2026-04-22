@@ -1,4 +1,4 @@
-import { GameObjects, Physics, Scene } from "phaser";
+import { GameObjects, Physics, Scene, Types } from "phaser";
 import { EUpgradeType, Player } from "../entities/Player/Player";
 import { OilPickup } from "../pickup/OilPickup";
 import { MagnetPickup } from "../pickup/MagnetPickup";
@@ -6,6 +6,8 @@ import { CoilPickup } from "../pickup/CoilPickup";
 
 export class GameScene extends Scene {
   player: Player;
+
+  groundGroup: Physics.Arcade.StaticGroup;
 
   oilPickupGroup: Physics.Arcade.StaticGroup;
 
@@ -19,7 +21,7 @@ export class GameScene extends Scene {
         arcade: {
           gravity: {
             x: 0,
-            y: 0,
+            y: 1200,
           },
           debug: true,
         }
@@ -41,6 +43,9 @@ export class GameScene extends Scene {
 
     this.createPlayer();
     this.createOil();
+
+    this.createGround();
+    this.physics.add.collider(this.player, this.groundGroup);
 
     this.physics.add.overlap(this.player, this.oilPickupGroup, (player, obj) => {
       this.player.oil.collect((obj as OilPickup).amount);
@@ -76,6 +81,20 @@ export class GameScene extends Scene {
     for (let i = 1; i <= 2; i++) {
       this.oilPickupGroup.create(i * 400, 200);
     }
+  }
+
+  createGround(): void {
+    this.groundGroup = this.physics.add.staticGroup();
+
+    this.spawnGround({ x: 0, y: this.scale.height }, { x: 5, y: 1 });
+
+    this.spawnGround({ x: 300 * 6, y: this.scale.height });
+  }
+  spawnGround(pos: Types.Math.Vector2Like, scale?: Types.Math.Vector2Like): void {
+    (this.groundGroup.create(pos.x, pos.y, "ground") as Physics.Arcade.Image)
+      .setOrigin(0, 1)
+      .setScale(scale?.x ?? 1, scale?.y ?? 1)
+      .refreshBody();
   }
 
   createInfo(): void {
