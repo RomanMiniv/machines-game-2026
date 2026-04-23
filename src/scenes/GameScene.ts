@@ -5,6 +5,7 @@ import { MagnetPickup } from "../pickups/MagnetPickup";
 import { CoilPickup } from "../pickups/CoilPickup";
 import { Robot } from "../entities/Robot/Robot";
 import { Drone } from "../entities/Drone/Drone";
+import { TransitionScene } from "./TransitionScene";
 
 export class GameScene extends Scene {
   player: Player;
@@ -40,7 +41,14 @@ export class GameScene extends Scene {
       fontSize: 36
     }).setOrigin(.5);
 
-    this.input.once("pointerdown", () => {
+    this.input.once("pointerdown", async () => {
+      this.scene.pause("GameScene");
+
+      const transitionScene = this.scene.get("TransitionScene") as TransitionScene;
+
+      this.scene.bringToTop("TransitionScene");
+      await transitionScene.fadeOut();
+
       this.scene.stop("GameScene");
       this.scene.wake("LoreManagerScene");
       this.events.emit("complete");

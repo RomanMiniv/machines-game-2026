@@ -6,6 +6,7 @@ import { LoreClimaxScene } from "./LoreClimaxScene";
 import { LoreResolutionScene } from "./LoreResolutionScene";
 import { LoreOutroScene } from "./LoreOutroScene";
 import { LoreScene } from "./LoreScene";
+import { TransitionScene } from "../TransitionScene";
 
 export interface ILoreFlowItem {
   key: ELoreSceneKeys;
@@ -40,14 +41,24 @@ export class LoreManagerScene extends Scene {
   create() {
     this.startLore();
 
-    this.scene.get("GameScene").events.once("complete", () => {
+    this.scene.get("GameScene").events.once("complete", async () => {
       this.startNextScene();
+
+      const transitionScene = this.scene.get("TransitionScene") as TransitionScene;
+
+      this.scene.bringToTop("TransitionScene");
+      await transitionScene.fadeIn();
     });
   }
 
-  private startLore() {
+  private async startLore() {
     this._index = -1;
     this.startNextScene();
+
+    const transitionScene = this.scene.get("TransitionScene") as TransitionScene;
+
+    this.scene.bringToTop("TransitionScene");
+    await transitionScene.fadeIn();
   }
 
   startNextScene() {
@@ -63,7 +74,12 @@ export class LoreManagerScene extends Scene {
     });
   }
 
-  private onSceneComplete(scene: Phaser.Scene) {
+  private async onSceneComplete(scene: Phaser.Scene) {
+    const transitionScene = this.scene.get("TransitionScene") as TransitionScene;
+
+    this.scene.bringToTop("TransitionScene");
+    await transitionScene.fadeOut();
+
     this.scene.remove(scene.scene.key);
 
     switch (this._loreFlow[this._index].key) {
@@ -78,5 +94,8 @@ export class LoreManagerScene extends Scene {
         this.startNextScene();
         break;
     }
+
+    this.scene.bringToTop("TransitionScene");
+    await transitionScene.fadeIn();
   }
 }

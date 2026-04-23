@@ -2,6 +2,13 @@ import { Scene } from "phaser";
 
 import { LoaderUI } from "../components/LoaderUI";
 
+import loreIntroURL from "@assets/images/lore/scene0.png";
+
+import loreStartPlaceholderURL from "@assets/images/lore/scene1_placeholder.png";
+import loreStartURL from "@assets/images/lore/scene1.png";
+import programmerURL from "@assets/images/lore/programmer.png";
+import beetleURL from "@assets/images/lore/beetle.png";
+
 import gearURL from "@assets/images/entities/player/gear.png";
 import magnetGearURL from "@assets/images/entities/player/magnetGear.png";
 import coilMagnetGearURL from "@assets/images/entities/player/coilMagnetGear.png";
@@ -35,13 +42,20 @@ export class PreloadScene extends Scene {
 
     // TODO: make sprites
 
+    this.load.image("loreIntro", loreIntroURL);
+
+    this.load.image("loreStartPlaceholder", loreStartPlaceholderURL);
+    this.load.image("loreStart", loreStartURL);
+    this.load.image("programmer", programmerURL);
+    this.load.image("beetle", beetleURL);
+
     this.load.image("playerGear", gearURL);
     this.load.image("plaerMagnetGear", magnetGearURL);
     this.load.image("playerCoilMagnetGear", coilMagnetGearURL);
 
     this.load.atlas("robot", robotURL, robotConfig);
     this.load.image("beam", beamURL);
-    
+
     this.load.atlas("drone", droneURL, droneConfig);
 
     this.load.image("oil", oilURL);
@@ -50,11 +64,12 @@ export class PreloadScene extends Scene {
 
     this.load.image("backgroundSky", backgroundSkyURL);
     this.load.image("backgroundCity", backgroundCityURL);
-    
+
     this.load.image("ground", groundURL);
   }
 
   create() {
+    this.scene.launch("TransitionScene");
     this.scene.start("MenuScene");
   }
 }

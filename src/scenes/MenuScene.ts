@@ -16,6 +16,7 @@ export class MenuScene extends Scene {
         {
           label: "PLAY",
           onClick: () => this.scene.start("LoreManagerScene")
+          // onClick: () => this.scene.start("GameScene")
         },
         {
           label: "OPTIONS",
