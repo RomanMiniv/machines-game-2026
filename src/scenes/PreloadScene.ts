@@ -4,14 +4,20 @@ import { LoaderUI } from "../components/LoaderUI";
 
 import loreIntroURL from "@assets/images/lore/scene0.png";
 
-import loreStartPlaceholderURL from "@assets/images/lore/scene1_placeholder.png";
 import loreStartURL from "@assets/images/lore/scene1.png";
 import programmerURL from "@assets/images/lore/programmer.png";
 import beetleURL from "@assets/images/lore/beetle.png";
+import computerURL from "@assets/images/lore/computer.png";
+import loreHopeURL from "@assets/images/lore/scene2.png";
+import engineerURL from "@assets/images/lore/engineer.png";
+import superMachineURL from "@assets/images/lore/superMachine.png";
+import switchOnURL from "@assets/images/lore/switch_on.png";
+import switchOffURL from "@assets/images/lore/switch_off.png";
 
 import gearURL from "@assets/images/entities/player/gear.png";
 import magnetGearURL from "@assets/images/entities/player/magnetGear.png";
 import coilMagnetGearURL from "@assets/images/entities/player/coilMagnetGear.png";
+import gearCopperURL from "@assets/images/entities/player/gearCopper.png";
 
 import oilURL from "@assets/images/stuff/oil.png";
 import magnetURL from "@assets/images/stuff/magnet.png";
@@ -44,14 +50,20 @@ export class PreloadScene extends Scene {
 
     this.load.image("loreIntro", loreIntroURL);
 
-    this.load.image("loreStartPlaceholder", loreStartPlaceholderURL);
     this.load.image("loreStart", loreStartURL);
     this.load.image("programmer", programmerURL);
     this.load.image("beetle", beetleURL);
+    this.load.image("computer", computerURL);
+    this.load.image("loreHope", loreHopeURL);
+    this.load.image("engineer", engineerURL);
+    this.load.image("superMachine", superMachineURL);
+    this.load.image("switchOn", switchOnURL);
+    this.load.image("switchOff", switchOffURL);
 
     this.load.image("playerGear", gearURL);
     this.load.image("plaerMagnetGear", magnetGearURL);
     this.load.image("playerCoilMagnetGear", coilMagnetGearURL);
+    this.load.image("playerGearCopper", gearCopperURL);
 
     this.load.atlas("robot", robotURL, robotConfig);
     this.load.image("beam", beamURL);

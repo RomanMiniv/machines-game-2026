@@ -6,8 +6,11 @@ import { CoilPickup } from "../pickups/CoilPickup";
 import { Robot } from "../entities/Robot/Robot";
 import { Drone } from "../entities/Drone/Drone";
 import { TransitionScene } from "./TransitionScene";
+import { Beetle } from "../entities/Beetle/Beetle";
 
 export class GameScene extends Scene {
+  isGameStarted: boolean;
+
   player: Player;
 
   robotGroup: Physics.Arcade.Group;
@@ -36,11 +39,6 @@ export class GameScene extends Scene {
   }
 
   create() {
-    const { width: cWidth, height: cHeight } = this.game.scale;
-    this.add.text(cWidth / 2, cHeight / 2, "Game", {
-      fontSize: 36
-    }).setOrigin(.5);
-
     this.input.once("pointerdown", async () => {
       this.scene.pause("GameScene");
 
@@ -55,18 +53,25 @@ export class GameScene extends Scene {
     });
 
     this.createBackground();
+    this.createMap();
+
+    this.startGame();
+  }
+
+  async startGame(): Promise<void> {
+    this.isGameStarted = true;
 
     this.createPlayer();
     this.createCamera();
+
+    this.physics.add.collider(this.player, this.groundGroup);
+
+    await this.playBeetle();
 
     this.createRobots();
     this.createDrones();
 
     this.createOil();
-
-    this.createMap();
-
-    this.physics.add.collider(this.player, this.groundGroup);
 
     this.physics.add.collider(this.robotGroup, this.groundGroup);
     this.physics.add.collider(this.player, this.robotGroup, (player, obj) => {
@@ -101,7 +106,17 @@ export class GameScene extends Scene {
   }
 
   createPlayer(): void {
-    this.player = new Player(this, 100, 400, "playerGear"); //TODO: move texture to class Player
+    this.player = new Player(this, 100, 400).setAlpha(0);
+  }
+
+  async playBeetle(): Promise<void> {
+    const beetle = new Beetle(this, -100, -100);
+    this.player.setPosition(beetle.x, beetle.y).setAlpha(1);
+    (this.player.body as Phaser.Physics.Arcade.Body).enable = false;
+    await beetle.move({ x: 200, y: 200 }, 3000, this.player);
+    (this.player.body as Phaser.Physics.Arcade.Body).enable = true;
+    await beetle.move({ x: 500, y: -100 }, 3000);
+    beetle.destroy();
   }
 
   createCamera(): void {
@@ -173,11 +188,15 @@ export class GameScene extends Scene {
   }
 
   update(time: number, delta: number): void {
+    if (!this.isGameStarted) {
+      return;
+    }
+
     this.player.update(time, delta);
     this.updateInfo();
   }
 
   updateInfo(): void {
-    this.oilText.setText(`Oil: ${Math.ceil(this.player.oil.amount)}/${this.player.oil.max}`);
+    this.oilText?.setText(`Oil: ${Math.ceil(this.player.oil.amount)}/${this.player.oil.max}`);
   }
 }

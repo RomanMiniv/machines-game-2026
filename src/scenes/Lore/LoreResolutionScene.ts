@@ -1,18 +1,37 @@
 import { LoreScene } from "./LoreScene";
 
 export class LoreResolutionScene extends LoreScene {
+  narrativeTexts: string[] = [
+    "It's a victory, hurray!!!!",
+  ];
+
   constructor() {
     super("LoreResolutionScene");
   }
 
-  create() {
-    const { width: cWidth, height: cHeight } = this.game.scale;
-    this.add.text(cWidth / 2, cHeight / 2, "Lore Resolution Scene", {
-      fontSize: 36
-    }).setOrigin(.5);
+  init() {
+    this._actionSysyem.init([
+      async () => {
+        await this.delayedCallSync(1000);
+        await this.destroyMachines();
+        await this.showText(this.narrativeTexts[0], { isSkipped: true });
+        await this.waitClick();
+        await this.hideText();
+        await this.delayedCallSync(1000);
+      },
+      async () => {
+        this.finish();
+      }
+    ]);
+  }
 
-    this.input.once("pointerdown", () => {
-      this.finish();
-    });
+  create() {
+    this.add.image(0, 0, "loreIntro").setOrigin(0);
+
+    this._actionSysyem.start();
+  }
+
+  async destroyMachines(): Promise<void> {
+    // TODO: add visual effect
   }
 }

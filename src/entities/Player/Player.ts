@@ -35,8 +35,8 @@ export class Player extends Physics.Arcade.Image {
 
   oil: Oil;
 
-  constructor(scene: Scene, x: number, y: number, texture: string | Textures.Texture, frame?: string | number) {
-    super(scene, x, y, texture, frame);
+  constructor(scene: Scene, x: number, y: number, texture?: string | Textures.Texture, frame?: string | number) {
+    super(scene, x, y, texture ?? "playerGear", frame);
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);

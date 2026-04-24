@@ -42,36 +42,41 @@ export class LoreManagerScene extends Scene {
     this.startLore();
 
     this.scene.get("GameScene").events.once("complete", async () => {
-      this.startNextScene();
+      const nextScene = this.startNextScene();
 
       const transitionScene = this.scene.get("TransitionScene") as TransitionScene;
 
       this.scene.bringToTop("TransitionScene");
       await transitionScene.fadeIn();
+      nextScene.scene.resume();
     });
   }
 
   private async startLore() {
     this._index = -1;
-    this.startNextScene();
+    const nextScene = this.startNextScene();
 
     const transitionScene = this.scene.get("TransitionScene") as TransitionScene;
 
     this.scene.bringToTop("TransitionScene");
     await transitionScene.fadeIn();
+    nextScene.scene.resume();
   }
 
-  startNextScene() {
+  startNextScene(): Scene {
     this._index++;
 
     const SceneClass = this._loreFlow[this._index].scene;
     const key = `Lore_${this._index}`;
 
     const scene = this.scene.add(key, SceneClass, true) as Scene;
+    scene.scene.pause();
 
     scene.events.once("complete", () => {
       this.onSceneComplete(scene);
     });
+
+    return scene;
   }
 
   private async onSceneComplete(scene: Phaser.Scene) {
@@ -82,20 +87,28 @@ export class LoreManagerScene extends Scene {
 
     this.scene.remove(scene.scene.key);
 
+    let nextSceneKey: string | null = null;
     switch (this._loreFlow[this._index].key) {
       case ELoreSceneKeys.LoreHopeScene:
         this.scene.sleep("LoreManagerScene");
         this.scene.start("GameScene");
+        this.scene.pause("GameScene");
+        nextSceneKey = "GameScene";
         break;
       case ELoreSceneKeys.LoreOutroScene:
         this.scene.start("CreditsScene");
+        this.scene.pause("CreditsScene");
+        nextSceneKey = "CreditsScene";
         break;
       default:
-        this.startNextScene();
+        nextSceneKey = this.startNextScene().scene.key;
         break;
     }
 
     this.scene.bringToTop("TransitionScene");
     await transitionScene.fadeIn();
+    if (nextSceneKey) {
+      this.scene.resume(nextSceneKey);
+    }
   }
 }
