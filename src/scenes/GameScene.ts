@@ -1,4 +1,4 @@
-import { GameObjects, Physics, Scene, Types } from "phaser";
+import { GameObjects, Physics, Scene, Sound, Types } from "phaser";
 import { EUpgradeType, Player } from "../entities/Player/Player";
 import { OilPickup } from "../pickups/OilPickup";
 import { MagnetPickup } from "../pickups/MagnetPickup";
@@ -22,6 +22,9 @@ export class GameScene extends Scene {
 
   oilText: GameObjects.Text;
 
+  private _musicGameStart: Sound.BaseSound | null;
+  private _musicGameLoop: Sound.BaseSound | null;
+
   constructor() {
     super({
       key: "GameScene",
@@ -39,9 +42,26 @@ export class GameScene extends Scene {
   }
 
   create() {
-    this.input.once("pointerdown", async () => {
-      this.scene.pause("GameScene");
+    this.events.on("pause", () => {
+      this.sound.pauseAll();
+    });
+    this.events.on("resume", () => {
+      this.sound.resumeAll();
+    });
+    this.events.on("shutdown", () => {
+      this.sound.stopAll();
 
+      if (this._musicGameStart) {
+        this._musicGameStart.stop();
+        this._musicGameStart = null;
+      }
+      if (this._musicGameLoop) {
+        this._musicGameLoop.stop();
+        this._musicGameLoop = null;
+      }
+    });
+
+    this.input.once("pointerdown", async () => {
       const transitionScene = this.scene.get("TransitionScene") as TransitionScene;
 
       this.scene.bringToTop("TransitionScene");
@@ -55,7 +75,26 @@ export class GameScene extends Scene {
     this.createBackground();
     this.createMap();
 
+    this.initMusic();
+
     this.startGame();
+  }
+
+  initMusic(): void {
+    this._musicGameStart = this.sound.add("musicGame");
+
+    this._musicGameLoop = this.sound.add("musicGameLoop", { loop: true });
+
+    this._musicGameStart.play();
+
+    this._musicGameStart.once("complete", () => {
+      this._musicGameLoop?.play();
+
+      if (this._musicGameStart) {
+        this._musicGameStart.destroy();
+        this._musicGameStart = null;
+      }
+    });
   }
 
   async startGame(): Promise<void> {
@@ -84,6 +123,7 @@ export class GameScene extends Scene {
     });
 
     this.physics.add.overlap(this.player, this.oilPickupGroup, (player, obj) => {
+      this.sound.play("oilDropSound");
       this.player.oil.collect((obj as OilPickup).amount);
       obj.destroy();
     });
@@ -153,7 +193,7 @@ export class GameScene extends Scene {
     });
 
     for (let i = 1; i <= 2; i++) {
-      this.oilPickupGroup.create(i * 400, 200);
+      this.oilPickupGroup.create(i * 400, 500);
     }
   }
 

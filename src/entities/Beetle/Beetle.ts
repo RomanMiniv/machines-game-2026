@@ -7,6 +7,9 @@ export class Beetle extends GameObjects.Image {
   }
 
   async move(toPos: Types.Math.Vector2Like, duration: number, captureObject?: GameObjects.Image): Promise<void> {
+    const beetleSound = this.scene.sound.add("beetleSound", { loop: true });
+    beetleSound.play();
+
     const fromX = this.x;
     const fromY = this.y;
 
@@ -51,7 +54,11 @@ export class Beetle extends GameObjects.Image {
 
           captureObject?.setPosition(x, y);
         },
-        onComplete: () => resolve(),
+        onComplete: () => {
+          beetleSound.stop();
+          beetleSound.destroy();
+          resolve();
+        },
       });
     });
   }

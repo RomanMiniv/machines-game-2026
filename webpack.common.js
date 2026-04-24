@@ -22,6 +22,13 @@ module.exports = {
         }
       },
       {
+        test: /\.(mp3|wav|ogg)$/i,
+        type: "asset/resource",
+        generator: {
+          filename: "[name][ext]",
+        }
+      },
+      {
         test: /\.tsx?$/,
         use: "ts-loader",
         exclude: /node_modules/,

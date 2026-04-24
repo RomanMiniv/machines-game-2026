@@ -1,8 +1,8 @@
 {
-	"compilerOptions": {
-		"allowJs": false,
-		"module": "NodeNext",
-		"target": "ES2023",
+  "compilerOptions": {
+    "allowJs": false,
+    "module": "NodeNext",
+    "target": "ES2023",
     "moduleResolution": "NodeNext",
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -11,16 +11,19 @@
     "rootDir": "src",
     "outDir": "dist",
     "paths": {
-      "@assets/*": ["./assets/*"],
+      "@assets/*": [
+        "./assets/*"
+      ],
     }
-	},
+  },
   "include": [
     "src",
     "types/image.d.ts",
+    "types/autio.d.ts",
     "types/phaser-plugin.d.ts"
   ],
-	"exclude": [
-		"node_modules",
+  "exclude": [
+    "node_modules",
     "build",
-	]
+  ]
 }

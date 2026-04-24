@@ -15,16 +15,25 @@ export class MenuScene extends Scene {
       buttons: [
         {
           label: "PLAY",
-          onClick: () => this.scene.start("LoreManagerScene")
-          // onClick: () => this.scene.start("GameScene")
+          onClick: () => {
+            this.sound.play("soundButton1");
+            this.scene.start("LoreManagerScene");
+            // this.scene.start("GameScene");
+          }
         },
         {
           label: "OPTIONS",
-          onClick: () => this.scene.start("OptionsScene")
+          onClick: () => {
+            this.sound.play("soundButton2");
+            this.scene.start("OptionsScene");
+          }
         },
         {
           label: "CREDITS",
-          onClick: () => this.scene.start("CreditsScene")
+          onClick: () => {
+            this.sound.play("soundButton3");
+            this.scene.start("CreditsScene");
+          }
         }
       ]
     });

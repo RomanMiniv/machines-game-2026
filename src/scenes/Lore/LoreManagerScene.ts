@@ -1,4 +1,4 @@
-import { Scene } from "phaser";
+import { Scene, Sound } from "phaser";
 import { LoreIntroScene } from "./LoreIntroScene";
 import { LoreStartScene } from "./LoreStartScene";
 import { LoreHopeScene } from "./LoreHopeScene";
@@ -34,6 +34,12 @@ export class LoreManagerScene extends Scene {
 
   private _index = -1;
 
+  private _musicIntroStart: Sound.BaseSound | null;
+  private _musicIntroLoop: Sound.BaseSound | null;
+
+  private _musicOutroStart: Sound.BaseSound | null;
+  private _musicOutroLoop: Sound.BaseSound | null;
+
   constructor() {
     super("LoreManagerScene");
   }
@@ -48,6 +54,22 @@ export class LoreManagerScene extends Scene {
 
       this.scene.bringToTop("TransitionScene");
       await transitionScene.fadeIn();
+
+      this._musicOutroStart = this.sound.add("musicOutro");
+
+      this._musicOutroLoop = this.sound.add("musicOutroLoop", { loop: true });
+
+      this._musicOutroStart.play();
+
+      this._musicOutroStart.once("complete", () => {
+        this._musicOutroLoop?.play();
+
+        if (this._musicOutroStart) {
+          this._musicOutroStart.destroy();
+          this._musicOutroStart = null;
+        }
+      });
+
       nextScene.scene.resume();
     });
   }
@@ -60,6 +82,22 @@ export class LoreManagerScene extends Scene {
 
     this.scene.bringToTop("TransitionScene");
     await transitionScene.fadeIn();
+
+    this._musicIntroStart = this.sound.add("musicIntro");
+
+    this._musicIntroLoop = this.sound.add("musicIntroLoop", { loop: true });
+
+    this._musicIntroStart.play();
+
+    this._musicIntroStart.once("complete", () => {
+      this._musicIntroLoop?.play();
+
+      if (this._musicIntroStart) {
+        this._musicIntroStart.destroy();
+        this._musicIntroStart = null;
+      }
+    });
+
     nextScene.scene.resume();
   }
 
@@ -90,12 +128,30 @@ export class LoreManagerScene extends Scene {
     let nextSceneKey: string | null = null;
     switch (this._loreFlow[this._index].key) {
       case ELoreSceneKeys.LoreHopeScene:
+        if (this._musicIntroStart) {
+          this._musicIntroStart.stop();
+          this._musicIntroStart = null;
+        }
+        if (this._musicIntroLoop) {
+          this._musicIntroLoop.stop();
+          this._musicIntroLoop = null;
+        }
+
         this.scene.sleep("LoreManagerScene");
         this.scene.start("GameScene");
         this.scene.pause("GameScene");
         nextSceneKey = "GameScene";
         break;
       case ELoreSceneKeys.LoreOutroScene:
+        if (this._musicOutroStart) {
+          this._musicOutroStart.stop();
+          this._musicOutroStart = null;
+        }
+        if (this._musicOutroLoop) {
+          this._musicOutroLoop.stop();
+          this._musicOutroLoop = null;
+        }
+
         this.scene.start("CreditsScene");
         this.scene.pause("CreditsScene");
         nextSceneKey = "CreditsScene";
