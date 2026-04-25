@@ -12,14 +12,14 @@ export class Robot extends Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
-    this.lazerGroup = this.scene.physics.add.group({
-      runChildUpdate: true,
-    });
-
     // TODO: connect with game flow
     setTimeout(() => {
       this.attack();
     }, 1000);
+  }
+
+  init(lazerGroup: Physics.Arcade.Group) {
+    this.lazerGroup = lazerGroup;
   }
 
   attack(): void {
@@ -28,15 +28,6 @@ export class Robot extends Physics.Arcade.Sprite {
 
   update(time: number, delta: number) {
     this.move();
-    this.updateLazers();
-  }
-
-  updateLazers(): void {
-    this.lazerGroup.children.forEach(lazer => {
-      if (!this.scene.cameras.main.worldView.contains((lazer as Lazer).x, (lazer as Lazer).y)) {
-        this.lazerGroup.remove(lazer, true, true);
-      }
-    });
   }
 
   move(): void {

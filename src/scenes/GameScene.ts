@@ -7,13 +7,14 @@ import { Robot } from "../entities/Robot/Robot";
 import { Drone } from "../entities/Drone/Drone";
 import { TransitionScene } from "./TransitionScene";
 import { Beetle } from "../entities/Beetle/Beetle";
+import { RobotManager } from "../entities/Robot/RobotManager";
 
 export class GameScene extends Scene {
   isGameStarted: boolean;
 
   player: Player;
 
-  robotGroup: Physics.Arcade.Group;
+  robotManager: RobotManager;
   droneGroup: Physics.Arcade.Group;
 
   groundGroup: Physics.Arcade.StaticGroup;
@@ -80,123 +81,6 @@ export class GameScene extends Scene {
     this.startGame();
   }
 
-  initMusic(): void {
-    this._musicGameStart = this.sound.add("musicGame");
-
-    this._musicGameLoop = this.sound.add("musicGameLoop", { loop: true });
-
-    this._musicGameStart.play({ volume: .9 });
-
-    this._musicGameStart.once("complete", () => {
-      this._musicGameLoop?.play({ volume: .9 });
-
-      if (this._musicGameStart) {
-        this._musicGameStart.destroy();
-        this._musicGameStart = null;
-      }
-    });
-  }
-
-  async startGame(): Promise<void> {
-    this.isGameStarted = true;
-
-    this.createPlayer();
-    this.createCamera();
-
-    this.physics.add.collider(this.player, this.groundGroup);
-
-    await this.playBeetle();
-
-    this.createRobots();
-    this.createDrones();
-
-    this.createOil();
-
-    this.physics.add.collider(this.robotGroup, this.groundGroup);
-    this.physics.add.collider(this.player, this.robotGroup, (player, obj) => {
-      console.error("collider: player and robot");
-    });
-
-    this.physics.add.collider(this.droneGroup, this.groundGroup);
-    this.physics.add.collider(this.player, this.droneGroup, (player, obj) => {
-      console.error("collider: player and drone");
-    });
-
-    this.physics.add.overlap(this.player, this.oilPickupGroup, (player, obj) => {
-      this.sound.play("oilDropSound");
-      this.player.oil.collect((obj as OilPickup).amount);
-      obj.destroy();
-    });
-
-    const magnetPickup = new MagnetPickup(this, 500, 500);
-    this.physics.add.overlap(this.player, magnetPickup, async (player, obj) => {
-      (obj as MagnetPickup).disableBody();
-      await this.player.upgrade(EUpgradeType.MAGNET);
-      obj.destroy();
-    });
-
-    const coilPickup = new CoilPickup(this, 1000, 500);
-    this.physics.add.overlap(this.player, coilPickup, async (player, obj) => {
-      (obj as CoilPickup).disableBody();
-      await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
-      obj.destroy();
-    });
-
-    this.createInfo();
-  }
-
-  createPlayer(): void {
-    this.player = new Player(this, 100, 400).setAlpha(0);
-  }
-
-  async playBeetle(): Promise<void> {
-    const beetle = new Beetle(this, -100, -100);
-    this.player.setPosition(beetle.x, beetle.y).setAlpha(1);
-    (this.player.body as Phaser.Physics.Arcade.Body).enable = false;
-    await beetle.move({ x: 200, y: 200 }, 3000, this.player);
-    (this.player.body as Phaser.Physics.Arcade.Body).enable = true;
-    await beetle.move({ x: 500, y: -100 }, 3000);
-    beetle.destroy();
-  }
-
-  createCamera(): void {
-    this.physics.world.setBounds(0, 0, 3840, 1080);
-    this.cameras.main.setBounds(0, 0, 3840, 1080);
-    this.cameras.main.startFollow(this.player, true, .06, 0);
-  }
-
-  createRobots(): void {
-    this.robotGroup = this.physics.add.group({
-      runChildUpdate: true,
-    });
-
-
-    for (let i = 1; i <= 2; i++) {
-      this.robotGroup.add(new Robot(this, i * 800, 500));
-    }
-  }
-
-  createDrones(): void {
-    this.droneGroup = this.physics.add.group({
-      runChildUpdate: true,
-    });
-
-
-    for (let i = 1; i <= 2; i++) {
-      this.droneGroup.add(new Drone(this, i * 800, 500));
-    }
-  }
-
-  createOil(): void {
-    this.oilPickupGroup = this.physics.add.staticGroup({
-      classType: OilPickup,
-    });
-
-    for (let i = 1; i <= 2; i++) {
-      this.oilPickupGroup.create(i * 400, 500);
-    }
-  }
-
   createBackground(): void {
     this.add.image(0, 0, "backgroundSky").setOrigin(0, 0);
     this.add.image(0, 0, "backgroundCity").setOrigin(0, 0);
@@ -220,6 +104,138 @@ export class GameScene extends Scene {
       .refreshBody();
   }
 
+  initMusic(): void {
+    this._musicGameStart = this.sound.add("musicGame");
+
+    this._musicGameLoop = this.sound.add("musicGameLoop", { loop: true });
+
+    this._musicGameStart.play({ volume: .9 });
+
+    this._musicGameStart.once("complete", () => {
+      this._musicGameLoop?.play({ volume: .9 });
+
+      if (this._musicGameStart) {
+        this._musicGameStart.destroy();
+        this._musicGameStart = null;
+      }
+    });
+  }
+
+  async startGame(): Promise<void> {
+    this.isGameStarted = true;
+
+    this.createPlayer();
+    this.createCamera();
+
+    this.initRobots();
+    this.initDrones();
+
+    this.setCollisions();
+
+    await this.playBeetle();
+
+    this.createRobots();
+    this.createDrones();
+
+    this.createOil();
+
+    this.createInfo();
+  }
+
+  setCollisions(): void {
+    // player
+    this.physics.add.collider(this.player, this.groundGroup);
+
+    // robot
+    this.physics.add.collider(this.robotManager, this.groundGroup);
+    this.physics.add.collider(this.player, this.robotManager, (player, obj) => {
+      console.error("collider: player and robot");
+    });
+    this.physics.add.overlap(this.player, this.robotManager.lazerGroup, (player, obj) => {
+      console.error("overlap: player and lazer");
+      this.robotManager.lazerGroup.remove((obj as Types.Physics.Arcade.GameObjectWithBody), true, true);
+    });
+
+    // drone
+    this.physics.add.collider(this.droneGroup, this.groundGroup);
+    this.physics.add.collider(this.player, this.droneGroup, (player, obj) => {
+      console.error("collider: player and drone");
+    });
+
+    // pickups
+
+    this.physics.add.overlap(this.player, this.oilPickupGroup, (player, obj) => {
+      this.sound.play("oilDropSound");
+      this.player.oil.collect((obj as OilPickup).amount);
+      obj.destroy();
+    });
+
+    const magnetPickup = new MagnetPickup(this, 500, 500);
+    this.physics.add.overlap(this.player, magnetPickup, async (player, obj) => {
+      (obj as MagnetPickup).disableBody();
+      await this.player.upgrade(EUpgradeType.MAGNET);
+      obj.destroy();
+    });
+
+    const coilPickup = new CoilPickup(this, 1000, 500);
+    this.physics.add.overlap(this.player, coilPickup, async (player, obj) => {
+      (obj as CoilPickup).disableBody();
+      await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
+      obj.destroy();
+    });
+  }
+
+  createPlayer(): void {
+    this.player = new Player(this, 100, 400).setAlpha(0);
+  }
+
+  async playBeetle(): Promise<void> {
+    const beetle = new Beetle(this, -100, -100);
+    this.player.setPosition(beetle.x, beetle.y).setAlpha(1);
+    (this.player.body as Phaser.Physics.Arcade.Body).enable = false;
+    await beetle.move({ x: 200, y: 200 }, 3000, this.player);
+    (this.player.body as Phaser.Physics.Arcade.Body).enable = true;
+    await beetle.move({ x: 500, y: -100 }, 3000);
+    beetle.destroy();
+  }
+
+  createCamera(): void {
+    this.physics.world.setBounds(0, 0, 3840, 1080);
+    this.cameras.main.setBounds(0, 0, 3840, 1080);
+    this.cameras.main.startFollow(this.player, true, .06, 0);
+  }
+
+  initRobots(): void {
+    this.robotManager = new RobotManager(this.physics.world, this);
+  }
+
+  createRobots(): void {
+    for (let i = 1; i <= 2; i++) {
+      this.robotManager.populate({ x: i * 800, y: 500 });
+    }
+  }
+
+  initDrones(): void {
+    this.droneGroup = this.physics.add.group({
+      runChildUpdate: true,
+    });
+  }
+  createDrones(): void {
+    for (let i = 1; i <= 2; i++) {
+      this.droneGroup.add(new Drone(this, i * 800, 500));
+    }
+  }
+
+  createOil(): void {
+    this.oilPickupGroup = this.physics.add.staticGroup({
+      classType: OilPickup,
+    });
+
+    for (let i = 1; i <= 2; i++) {
+      this.oilPickupGroup.create(i * 400, 500);
+    }
+  }
+
   createInfo(): void {
     this.oilText = this.add.text(10, 10, "Oil: 100", {
       font: "20px Arial",
@@ -233,6 +249,7 @@ export class GameScene extends Scene {
     }
 
     this.player.update(time, delta);
+    this.robotManager.update(time, delta);
     this.updateInfo();
   }
 
