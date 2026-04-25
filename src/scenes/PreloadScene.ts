@@ -41,8 +41,8 @@ import groundURL from "@assets/images/background/road.png";
 
 // music
 
-import musicIntroURL from "@assets/audio/music/MUSIC_Begin_#1.ogg";
-import musicIntroFallbackURL from "@assets/audio/music/MUSIC_Begin_#1.mp3";
+import musicIntroURL from "@assets/audio/music/MUSIC_Begin.ogg";
+import musicIntroFallbackURL from "@assets/audio/music/MUSIC_Begin.mp3";
 
 import musicIntroLoopURL from "@assets/audio/music/MUSIC_Begin_Loop.ogg";
 import musicIntroLoopFallbackURL from "@assets/audio/music/MUSIC_Begin_Loop.mp3";
@@ -50,8 +50,8 @@ import musicIntroLoopFallbackURL from "@assets/audio/music/MUSIC_Begin_Loop.mp3"
 import musicOutroLoopURL from "@assets/audio/music/MUSIC_Ending_Loop.ogg";
 import musicOutroLoopFallbackURL from "@assets/audio/music/MUSIC_Ending_Loop.mp3";
 
-import musicGameURL from "@assets/audio/music/MUSIC_Gameplay_#1.ogg";
-import musicGameFallbackURL from "@assets/audio/music/MUSIC_Gameplay_#1.mp3";
+import musicGameURL from "@assets/audio/music/MUSIC_Gameplay.ogg";
+import musicGameFallbackURL from "@assets/audio/music/MUSIC_Gameplay.mp3";
 
 import musicGameLoopURL from "@assets/audio/music/MUSIC_Gameplay_Loop.ogg";
 import musicGameLoopFallbackURL from "@assets/audio/music/MUSIC_Gameplay_Loop.mp3";
