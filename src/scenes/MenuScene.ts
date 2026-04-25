@@ -16,7 +16,7 @@ export class MenuScene extends Scene {
         {
           label: "PLAY",
           onClick: () => {
-            this.sound.play("soundButton1");
+            this.sound.play("soundButton1", { volume: .6 });
             this.scene.start("LoreManagerScene");
             // this.scene.start("GameScene");
           }
@@ -24,14 +24,14 @@ export class MenuScene extends Scene {
         {
           label: "OPTIONS",
           onClick: () => {
-            this.sound.play("soundButton2");
+            this.sound.play("soundButton2", { volume: .6 });
             this.scene.start("OptionsScene");
           }
         },
         {
           label: "CREDITS",
           onClick: () => {
-            this.sound.play("soundButton3");
+            this.sound.play("soundButton3", { volume: .6 });
             this.scene.start("CreditsScene");
           }
         }

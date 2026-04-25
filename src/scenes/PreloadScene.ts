@@ -32,7 +32,7 @@ import droneConfig from "@assets/images/entities/drone/drone.json";
 
 import backgroundSkyURL from "@assets/images/background/backgroundSky.png";
 import backgroundCityURL from "@assets/images/background/backgroundCity.png";
-import groundURL from "@assets/images/ground.jpg";
+import groundURL from "@assets/images/background/road.png";
 
 import musicIntroURL from "@assets/audio/music/MUSIC_Begin_#1.ogg";
 import musicIntroLoopURL from "@assets/audio/music/MUSIC_Begin_Loop.ogg";
@@ -118,8 +118,8 @@ export class PreloadScene extends Scene {
     this.load.audio("playerMoveSound", playerMoveSoundURL);
     this.load.audio("playerJumpSound", playerJumpSoundURL);
 
-    this.load.audio("electromagnetSound", electromagnetSoundURL); // on attack or collect?
-    this.load.audio("magnetSound", magnetSoundURL); // on attack or collect?
+    this.load.audio("electromagnetSound", electromagnetSoundURL);
+    this.load.audio("magnetSound", magnetSoundURL);
     this.load.audio("oilDropSound", oilDropSoundURL);
 
     this.load.audio("enemyDestroyedSound", enemyDestroyedSoundURL); // to add

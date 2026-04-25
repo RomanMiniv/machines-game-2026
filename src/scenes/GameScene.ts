@@ -85,10 +85,10 @@ export class GameScene extends Scene {
 
     this._musicGameLoop = this.sound.add("musicGameLoop", { loop: true });
 
-    this._musicGameStart.play();
+    this._musicGameStart.play({ volume: .9 });
 
     this._musicGameStart.once("complete", () => {
-      this._musicGameLoop?.play();
+      this._musicGameLoop?.play({ volume: .9 });
 
       if (this._musicGameStart) {
         this._musicGameStart.destroy();
