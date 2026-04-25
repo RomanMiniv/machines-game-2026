@@ -1,7 +1,6 @@
 import { Physics, Types } from "phaser";
 import { Robot } from "./Robot";
 import { Lazer } from "./stuff/Lazer";
-import { Player } from "../Player/Player";
 
 export class RobotManager extends Physics.Arcade.Group {
   lazerGroup: Physics.Arcade.Group;
