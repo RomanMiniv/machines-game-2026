@@ -39,6 +39,10 @@ import backgroundSkyURL from "@assets/images/background/backgroundSky.png";
 import backgroundCityURL from "@assets/images/background/backgroundCity.png";
 import groundURL from "@assets/images/background/road.png";
 
+import pauseBGURL from "@assets/images/popup/pauseBG.png";
+import pauseEngineerURL from "@assets/images/popup/pauseEngineer.png";
+import pauseEngineerConfigURL from "@assets/images/popup/pauseEngineer.json";
+
 // music
 
 import musicIntroURL from "@assets/audio/music/MUSIC_Begin.ogg";
@@ -129,8 +133,10 @@ export class PreloadScene extends Scene {
 
     this.load.image("backgroundSky", backgroundSkyURL);
     this.load.image("backgroundCity", backgroundCityURL);
-
     this.load.image("ground", groundURL);
+
+    this.load.image("pauseBG", pauseBGURL);
+    this.load.atlas("pauseEngineer", pauseEngineerURL, pauseEngineerConfigURL);
 
     this.load.audio("musicIntro", [musicIntroURL, musicIntroFallbackURL]);
     this.load.audio("musicIntroLoop", [musicIntroLoopURL, musicIntroLoopFallbackURL]);

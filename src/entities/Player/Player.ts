@@ -206,6 +206,7 @@ export class Player extends Physics.Arcade.Image {
 
     if (this.health.current <= 0) {
       this.scene.events.emit("gameOver", EGameStatus.LOST);
+      return;
     }
 
     this.scene.time.delayedCall(200, () => {

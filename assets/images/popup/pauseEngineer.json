@@ -1,0 +1,28 @@
+{"frames": [
+
+{
+	"filename": "pauseEngineer1.png",
+	"frame": {"x":2,"y":2,"w":313,"h":718},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":313,"h":718},
+	"sourceSize": {"w":313,"h":718}
+},
+{
+	"filename": "pauseEngineer2.png",
+	"frame": {"x":317,"y":2,"w":358,"h":718},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":358,"h":718},
+	"sourceSize": {"w":358,"h":718}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "pauseEngineer.png",
+	"format": "RGBA8888",
+	"size": {"w":677,"h":722},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f3bc1b5fd9ade0d1b51b8981681ef150:3882e128310d9837b18ca62cac995229:f0194857a5143a499f191378d29137e1$"
+}
+}

@@ -9,6 +9,7 @@ import { CreditsScene } from "./scenes/CreditsScene";
 import { OptionsScene } from "./scenes/OptionsScene";
 import { LoreManagerScene } from "./scenes/Lore/LoreManagerScene";
 import { TransitionScene } from "./scenes/TransitionScene";
+import { PopupScene } from "./scenes/PopupScene";
 
 const parent = document.getElementById("root") as HTMLDivElement;
 
@@ -36,6 +37,7 @@ const config: Phaser.Types.Core.GameConfig = {
     BootScene,
     PreloadScene,
     TransitionScene,
+    PopupScene,
     MenuScene,
     GameScene,
     OptionsScene,

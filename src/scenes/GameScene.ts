@@ -1,4 +1,4 @@
-import { GameObjects, Physics, Scene, Sound, Types } from "phaser";
+import { GameObjects, Input, Physics, Scene, Sound, Types } from "phaser";
 import { EUpgradeType, Player } from "../entities/Player/Player";
 import { OilPickup } from "../pickups/OilPickup";
 import { MagnetPickup } from "../pickups/MagnetPickup";
@@ -8,11 +8,16 @@ import { Drone } from "../entities/Drone/Drone";
 import { TransitionScene } from "./TransitionScene";
 import { Beetle } from "../entities/Beetle/Beetle";
 import { RobotManager } from "../entities/Robot/RobotManager";
+import { IPopupData } from "./PopupScene";
 
 export enum EGameStatus {
   START,
   LOST,
   WIN,
+}
+
+interface IInputControl {
+  pause: Input.Keyboard.Key;
 }
 
 export class GameScene extends Scene {
@@ -34,6 +39,8 @@ export class GameScene extends Scene {
   private _musicGameLoop: Sound.BaseSound | null;
 
   private _gameStatus: EGameStatus;
+
+  private _inputControl!: IInputControl;
 
   constructor() {
     super({
@@ -91,14 +98,39 @@ export class GameScene extends Scene {
     this.initMusic();
 
     this.startGame();
+
+    this.initUserInput();
   }
 
   async setGameOver(gameStatus: EGameStatus): Promise<void> {
     switch (gameStatus) {
       case EGameStatus.LOST:
         {
-          this.reset();
-          this.scene.restart();
+          const popupData: IPopupData = {
+            title: "Game Over",
+            menuConfig: {
+              buttons: [
+                {
+                  label: "Retry",
+                  onClick: () => {
+                    this.sound.play("soundButton1", { volume: .5 });
+                    this.reset();
+                    this.scene.restart();
+                  },
+                },
+                {
+                  label: "Quit Game",
+                  onClick: () => {
+                    this.sound.play("soundButton1", { volume: .5 });
+                    this.scene.stop("PopupScene");
+                    this.scene.start("MenuScene");
+                  },
+                }
+              ]
+            }
+          };
+
+          this.scene.start("PopupScene", popupData);
         }
         break;
       case EGameStatus.WIN:
@@ -176,6 +208,43 @@ export class GameScene extends Scene {
     this.createDrones();
 
     this.createOil();
+  }
+
+  initUserInput(): void {
+    this._inputControl = (this.input.keyboard as Input.Keyboard.KeyboardPlugin).addKeys({
+      pause: Input.Keyboard.KeyCodes.P,
+    }) as IInputControl;
+
+    this._inputControl.pause.on("down", () => {
+      this.scene.pause("GameScene");
+
+      const popupData: IPopupData = {
+        title: "Pause",
+        menuConfig: {
+          buttons: [
+            {
+              label: "Resume",
+              onClick: () => {
+                this.sound.play("soundButton1", { volume: .5 });
+                this.scene.stop("PopupScene");
+                this.scene.resume("GameScene");
+              },
+            },
+            {
+              label: "Quit Game",
+              onClick: () => {
+                this.sound.play("soundButton1", { volume: .5 });
+                this.scene.stop("PopupScene");
+                this.scene.start("MenuScene");
+              },
+            }
+          ]
+        }
+      };
+
+      this.scene.bringToTop("PopupScene");
+      this.scene.launch("PopupScene", popupData);
+    });
   }
 
   setCollisions(): void {
