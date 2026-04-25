@@ -1,4 +1,4 @@
-import { Scene, Physics, Textures } from "phaser";
+import { Scene, Physics, Textures, GameObjects, Types } from "phaser";
 import { Lazer } from "./stuff/Lazer";
 
 export class Robot extends Physics.Arcade.Sprite {
@@ -24,6 +24,31 @@ export class Robot extends Physics.Arcade.Sprite {
 
   attack(): void {
     this.lazerGroup.add(new Lazer(this.scene, this.x, this.y).fire({ x: 0, y: 0 }));
+  }
+
+  kill(): void {
+    (this.body as Phaser.Physics.Arcade.Body).enable = false;
+
+    this.scene.sound.play("enemyDestroyedSound");
+
+    this.scene.cameras.main.shake(100, 0.01);
+
+    this.setTint(0xff0000);
+
+    const particlesEmitter = this.scene.add.particles(this.x, this.y, "explosion", {
+      speed: { min: -150, max: 150 },
+      angle: { min: 0, max: 360 },
+      lifespan: 250,
+      quantity: 25,
+      scale: { start: 2, end: 0 },
+      gravityY: 200,
+    });
+
+    particlesEmitter.explode();
+
+    this.scene.time.delayedCall(200, () => {
+      this.destroy();
+    });
   }
 
   update(time: number, delta: number) {

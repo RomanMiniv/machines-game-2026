@@ -149,7 +149,7 @@ export class GameScene extends Scene {
     // robot
     this.physics.add.collider(this.robotManager, this.groundGroup);
     this.physics.add.collider(this.player, this.robotManager, (player, obj) => {
-      console.error("collider: player and robot");
+      (obj as Robot).kill();
     });
     this.physics.add.overlap(this.player, this.robotManager.lazerGroup, (player, obj) => {
       console.error("overlap: player and lazer");
@@ -159,7 +159,7 @@ export class GameScene extends Scene {
     // drone
     this.physics.add.collider(this.droneGroup, this.groundGroup);
     this.physics.add.collider(this.player, this.droneGroup, (player, obj) => {
-      console.error("collider: player and drone");
+      (obj as Drone).kill();
     });
 
     // pickups

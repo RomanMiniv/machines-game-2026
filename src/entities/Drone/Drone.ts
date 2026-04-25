@@ -28,6 +28,31 @@ export class Drone extends Physics.Arcade.Sprite {
     this.play("droneMove");
   }
 
+  kill(): void {
+    (this.body as Phaser.Physics.Arcade.Body).enable = false;
+
+    this.scene.sound.play("enemyDestroyedSound");
+
+    this.scene.cameras.main.shake(100, 0.01);
+
+    this.setTint(0xff0000);
+
+    const particlesEmitter = this.scene.add.particles(this.x, this.y, "explosion", {
+      speed: { min: -150, max: 150 },
+      angle: { min: 0, max: 360 },
+      lifespan: 250,
+      quantity: 25,
+      scale: { start: 2, end: 0 },
+      gravityY: 200,
+    });
+
+    particlesEmitter.explode();
+
+    this.scene.time.delayedCall(300, () => {
+      this.destroy();
+    });
+  }
+
   update(time: number, delta: number) {
     this.move(time);
   }
