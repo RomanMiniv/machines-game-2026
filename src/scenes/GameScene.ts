@@ -148,18 +148,31 @@ export class GameScene extends Scene {
 
     // robot
     this.physics.add.collider(this.robotManager, this.groundGroup);
-    this.physics.add.collider(this.player, this.robotManager, (player, obj) => {
-      (obj as Robot).kill();
+    this.physics.add.collider(this.player, this.robotManager);
+    this.physics.add.overlap(this.player.physicsStuff, this.robotManager, (obj1, obj2) => {
+      if (this.player.getCurrentUpgradeType() === EUpgradeType.ELECTROMAGNET) {
+        (obj2 as Robot).kill();
+      } else {
+        this.playPlayerForceFiled(obj1 as Types.Physics.Arcade.ImageWithDynamicBody, obj2 as Types.Physics.Arcade.ImageWithDynamicBody);
+      }
     });
     this.physics.add.overlap(this.player, this.robotManager.lazerGroup, (player, obj) => {
-      console.error("overlap: player and lazer");
+      (player as Player).kill(10);
       this.robotManager.lazerGroup.remove((obj as Types.Physics.Arcade.GameObjectWithBody), true, true);
     });
 
     // drone
     this.physics.add.collider(this.droneGroup, this.groundGroup);
     this.physics.add.collider(this.player, this.droneGroup, (player, obj) => {
-      (obj as Drone).kill();
+      (player as Player).kill(20);
+    });
+    this.physics.add.collider(this.player.physicsStuff, this.droneGroup);
+    this.physics.add.overlap(this.player.physicsStuff, this.droneGroup, (obj1, obj2) => {
+      if (this.player.getCurrentUpgradeType() === EUpgradeType.ELECTROMAGNET) {
+        (obj2 as Drone).kill();
+      } else {
+        this.playPlayerForceFiled(obj1 as Types.Physics.Arcade.ImageWithDynamicBody, obj2 as Types.Physics.Arcade.ImageWithDynamicBody);
+      }
     });
 
     // pickups
@@ -183,6 +196,32 @@ export class GameScene extends Scene {
       await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
       obj.destroy();
     });
+  }
+
+  playPlayerForceFiled(obj1: Types.Physics.Arcade.ImageWithDynamicBody, obj2: Types.Physics.Arcade.ImageWithDynamicBody,): void {
+    const source = obj1;
+    const target = obj2;
+
+    const dx = target.x - source.x;
+    const dy = target.y - source.y;
+
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+    const radius = source.displayWidth;
+
+    const nx = dx / dist;
+    const ny = dy / dist;
+
+    const pushOut = 100;
+
+    target.setPosition(
+      source.x + nx * (radius + pushOut),
+      source.y + ny * (radius + pushOut)
+    );
+
+    const extraForce = 400;
+
+    target.setVelocity(nx * extraForce, ny * extraForce);
   }
 
   createPlayer(): void {

@@ -1,12 +1,11 @@
-import { Scene, Physics, Input, Textures, Sound } from "phaser";
+import { Scene, Physics, Input, Textures, Sound, Types } from "phaser";
 import { Oil } from "./stuff/Oil";
 
 interface IInputControl {
-  up: Input.Keyboard.Key;
   right: Input.Keyboard.Key;
-  down: Input.Keyboard.Key;
   left: Input.Keyboard.Key;
   space: Input.Keyboard.Key;
+  attack: Input.Keyboard.Key;
 }
 
 export enum EUpgradeType {
@@ -35,6 +34,9 @@ export class Player extends Physics.Arcade.Image {
 
   oil: Oil;
 
+  physicsStuff: Phaser.Physics.Arcade.Group;
+  private _forceField: Types.Physics.Arcade.ImageWithDynamicBody | null;
+
   private _moveSound: Sound.BaseSound | null;
 
   constructor(scene: Scene, x: number, y: number, texture?: string | Textures.Texture, frame?: string | number) {
@@ -50,7 +52,14 @@ export class Player extends Physics.Arcade.Image {
       right: Input.Keyboard.KeyCodes.D,
       left: Input.Keyboard.KeyCodes.A,
       space: Input.Keyboard.KeyCodes.SPACE,
+      attack: Input.Keyboard.KeyCodes.K,
     }) as IInputControl;
+
+    this.physicsStuff = scene.physics.add.group();
+  }
+
+  getCurrentUpgradeType(): EUpgradeType {
+    return this._upgradeState.current;
   }
 
   initUpgrade(): void {
@@ -117,12 +126,72 @@ export class Player extends Physics.Arcade.Image {
     this._upgradeState.current = upgradeType;
   }
 
+  attack(): void {
+    console.error("attack");
+    if (this._forceField || this._upgradeState.current === EUpgradeType.DEFAULT) {
+      return;
+    }
+
+    let forceFieldTextureKey: string = "";
+    let forceFieldSoundKey: string = "";
+
+    switch (this._upgradeState.current) {
+      case EUpgradeType.MAGNET:
+        forceFieldTextureKey = "playerFieldMagnetic";
+        forceFieldSoundKey = "magnetSound";
+        break;
+
+      case EUpgradeType.ELECTROMAGNET:
+        forceFieldTextureKey = "playerFieldElectromagnetic";
+        forceFieldSoundKey = "electromagnetSound";
+        break;
+    }
+
+    this.scene.sound.play(forceFieldSoundKey);
+
+    this._forceField = this.scene.physics.add.image(this.x, this.y, forceFieldTextureKey)
+      .setOrigin(.5)
+      .setScale(0)
+      .setImmovable();
+
+    (this._forceField.body as Phaser.Physics.Arcade.Body)
+      .setAllowGravity(false);
+
+    this.physicsStuff.add(this._forceField);
+
+    this.scene.tweens.add({
+      targets: this._forceField,
+      scale: 2,
+      duration: 200,
+      onComplete: () => {
+        this.scene.tweens.add({
+          delay: 500,
+          targets: this._forceField,
+          alpha: .5,
+          duration: 200,
+          yoyo: true,
+          repeat: 2,
+          onComplete: () => {
+            if (this._forceField) {
+              this.physicsStuff.remove(this._forceField, true, true);
+              this._forceField = null;
+            }
+          }
+        });
+      }
+    });
+  }
+
+  kill(damage: number): void {
+
+  }
+
   update(time: number, delta: number) {
-    this.move();
+    this.move(time, delta);
     this.oil.update(time, delta);
   }
 
-  move(): void {
+  move(time: number, delta: number): void {
     let velocityHorizontalDirection: number = 0;
 
     if (this._inputControl.left.isDown) {
@@ -201,5 +270,11 @@ export class Player extends Physics.Arcade.Image {
 
     this._prevVelocityY = body.velocity.y;
     this._wasGrounded = isGrounded;
+
+    if (Phaser.Input.Keyboard.JustDown(this._inputControl.attack)) {
+      this.attack();
+    }
+
+    this._forceField?.setPosition(this.x, this.y);
   }
 }
