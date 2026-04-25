@@ -38,8 +38,8 @@ import musicIntroURL from "@assets/audio/music/MUSIC_Begin_#1.ogg";
 import musicIntroLoopURL from "@assets/audio/music/MUSIC_Begin_Loop.ogg";
 import musicOutroURL from "@assets/audio/music/MUSIC_Ending_#1.ogg";
 import musicOutroLoopURL from "@assets/audio/music/MUSIC_Ending_Loop.ogg";
-import musicGameURL from "@assets/audio/music/MUSIC_Gameplay_Placeholder1.ogg";
-import musicGameLoopURL from "@assets/audio/music/MUSIC_Gameplay_Placeholder2.ogg";
+import musicGameURL from "@assets/audio/music/MUSIC_Gameplay_#1.ogg";
+import musicGameLoopURL from "@assets/audio/music/MUSIC_Gameplay_Loop.ogg";
 
 import buttonSound1URL from "@assets/audio/soundFX/Button1.ogg";
 import buttonSound2URL from "@assets/audio/soundFX/Button2.ogg";

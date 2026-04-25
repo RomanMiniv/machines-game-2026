@@ -134,7 +134,7 @@ export class Player extends Physics.Arcade.Image {
     if (velocityHorizontalDirection !== 0) {
       if (!this._moveSound || !this._moveSound.isPlaying) {
         this._moveSound = this.scene.sound.add("playerMoveSound", { loop: true });
-        this._moveSound.play();
+        this._moveSound.play({ volume: .8 });
       }
     } else {
       if (this._moveSound) {

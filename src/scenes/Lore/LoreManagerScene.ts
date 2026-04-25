@@ -59,10 +59,10 @@ export class LoreManagerScene extends Scene {
 
       this._musicOutroLoop = this.sound.add("musicOutroLoop", { loop: true });
 
-      this._musicOutroStart.play({ volume: .9 });
+      this._musicOutroStart.play({ volume: .8 });
 
       this._musicOutroStart.once("complete", () => {
-        this._musicOutroLoop?.play({ volume: .9 });
+        this._musicOutroLoop?.play({ volume: .8 });
 
         if (this._musicOutroStart) {
           this._musicOutroStart.destroy();
@@ -87,10 +87,10 @@ export class LoreManagerScene extends Scene {
 
     this._musicIntroLoop = this.sound.add("musicIntroLoop", { loop: true });
 
-    this._musicIntroStart.play({ volume: .9 });
+    this._musicIntroStart.play({ volume: .8 });
 
     this._musicIntroStart.once("complete", () => {
-      this._musicIntroLoop?.play({ volume: .9 });
+      this._musicIntroLoop?.play({ volume: .8 });
 
       if (this._musicIntroStart) {
         this._musicIntroStart.destroy();
