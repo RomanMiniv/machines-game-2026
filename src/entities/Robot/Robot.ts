@@ -13,9 +13,9 @@ export class Robot extends Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     // TODO: connect with game flow
-    setTimeout(() => {
+    this.scene.time.delayedCall(1000, () => {
       this.attack();
-    }, 1000);
+    });
   }
 
   init(lazerGroup: Physics.Arcade.Group) {

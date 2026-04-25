@@ -1,5 +1,6 @@
 import { Scene, Physics, Input, Textures, Sound, Types } from "phaser";
 import { Oil } from "./stuff/Oil";
+import { EGameStatus } from "../../scenes/GameScene";
 
 interface IInputControl {
   right: Input.Keyboard.Key;
@@ -33,6 +34,16 @@ export class Player extends Physics.Arcade.Image {
   private _prevVelocityY: number = 0;
 
   oil: Oil;
+
+  isStarted: boolean;
+
+  health = {
+    current: 100,
+    min: 0,
+    max: 100,
+  };
+
+  private _isKillDelay: boolean;
 
   physicsStuff: Phaser.Physics.Arcade.Group;
   private _forceField: Types.Physics.Arcade.ImageWithDynamicBody | null;
@@ -127,7 +138,6 @@ export class Player extends Physics.Arcade.Image {
   }
 
   attack(): void {
-    console.error("attack");
     if (this._forceField || this._upgradeState.current === EUpgradeType.DEFAULT) {
       return;
     }
@@ -183,12 +193,34 @@ export class Player extends Physics.Arcade.Image {
   }
 
   kill(damage: number): void {
+    if (this._isKillDelay) {
+      return;
+    }
+    this._isKillDelay = true;
 
+    const currentHealth = this.health.current - damage;
+
+    this.health.current = Phaser.Math.Clamp(currentHealth, this.health.min, this.health.max);
+
+    this.setTint(0xff0000);
+
+    if (this.health.current <= 0) {
+      this.scene.events.emit("gameOver", EGameStatus.LOST);
+    }
+
+    this.scene.time.delayedCall(200, () => {
+      this.clearTint();
+      this.scene.time.delayedCall(300, () => {
+        this._isKillDelay = false;
+      });
+    });
   }
 
   update(time: number, delta: number) {
     this.move(time, delta);
-    this.oil.update(time, delta);
+    if (this.isStarted) {
+      this.oil.update(time, delta);
+    }
   }
 
   move(time: number, delta: number): void {

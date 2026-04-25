@@ -9,6 +9,12 @@ import { TransitionScene } from "./TransitionScene";
 import { Beetle } from "../entities/Beetle/Beetle";
 import { RobotManager } from "../entities/Robot/RobotManager";
 
+export enum EGameStatus {
+  START,
+  LOST,
+  WIN,
+}
+
 export class GameScene extends Scene {
   isGameStarted: boolean;
 
@@ -22,9 +28,12 @@ export class GameScene extends Scene {
   oilPickupGroup: Physics.Arcade.StaticGroup;
 
   oilText: GameObjects.Text;
+  hpText: GameObjects.Text;
 
   private _musicGameStart: Sound.BaseSound | null;
   private _musicGameLoop: Sound.BaseSound | null;
+
+  private _gameStatus: EGameStatus;
 
   constructor() {
     super({
@@ -40,6 +49,11 @@ export class GameScene extends Scene {
         }
       },
     });
+  }
+
+  reset(): void {
+    this.isGameStarted = false;
+    this._gameStatus = EGameStatus.START;
   }
 
   create() {
@@ -62,15 +76,13 @@ export class GameScene extends Scene {
       }
     });
 
+    this.events.on("gameOver", (gameStatus: EGameStatus) => {
+      this._gameStatus = gameStatus;
+      this.setGameOver(gameStatus);
+    });
+
     this.input.once("pointerdown", async () => {
-      const transitionScene = this.scene.get("TransitionScene") as TransitionScene;
-
-      this.scene.bringToTop("TransitionScene");
-      await transitionScene.fadeOut();
-
-      this.scene.stop("GameScene");
-      this.scene.wake("LoreManagerScene");
-      this.events.emit("complete");
+      this.setGameOver(EGameStatus.WIN);
     });
 
     this.createBackground();
@@ -79,6 +91,29 @@ export class GameScene extends Scene {
     this.initMusic();
 
     this.startGame();
+  }
+
+  async setGameOver(gameStatus: EGameStatus): Promise<void> {
+    switch (gameStatus) {
+      case EGameStatus.LOST:
+        {
+          this.reset();
+          this.scene.restart();
+        }
+        break;
+      case EGameStatus.WIN:
+        {
+          const transitionScene = this.scene.get("TransitionScene") as TransitionScene;
+
+          this.scene.bringToTop("TransitionScene");
+          await transitionScene.fadeOut();
+
+          this.scene.stop("GameScene");
+          this.scene.wake("LoreManagerScene");
+          this.events.emit("complete");
+        }
+        break;
+    }
   }
 
   createBackground(): void {
@@ -129,8 +164,11 @@ export class GameScene extends Scene {
 
     this.initRobots();
     this.initDrones();
+    this.initOil();
 
     this.setCollisions();
+
+    this.createInfo();
 
     await this.playBeetle();
 
@@ -138,8 +176,6 @@ export class GameScene extends Scene {
     this.createDrones();
 
     this.createOil();
-
-    this.createInfo();
   }
 
   setCollisions(): void {
@@ -157,14 +193,14 @@ export class GameScene extends Scene {
       }
     });
     this.physics.add.overlap(this.player, this.robotManager.lazerGroup, (player, obj) => {
-      (player as Player).kill(10);
+      (player as Player).kill(20);
       this.robotManager.lazerGroup.remove((obj as Types.Physics.Arcade.GameObjectWithBody), true, true);
     });
 
     // drone
     this.physics.add.collider(this.droneGroup, this.groundGroup);
     this.physics.add.collider(this.player, this.droneGroup, (player, obj) => {
-      (player as Player).kill(20);
+      (player as Player).kill(10);
     });
     this.physics.add.collider(this.player.physicsStuff, this.droneGroup);
     this.physics.add.overlap(this.player.physicsStuff, this.droneGroup, (obj1, obj2) => {
@@ -236,6 +272,7 @@ export class GameScene extends Scene {
     (this.player.body as Phaser.Physics.Arcade.Body).enable = true;
     await beetle.move({ x: 500, y: -100 }, 3000);
     beetle.destroy();
+    this.player.isStarted = true;
   }
 
   createCamera(): void {
@@ -265,25 +302,37 @@ export class GameScene extends Scene {
     }
   }
 
-  createOil(): void {
+  initOil(): void {
     this.oilPickupGroup = this.physics.add.staticGroup({
       classType: OilPickup,
     });
-
+  }
+  createOil(): void {
     for (let i = 1; i <= 2; i++) {
       this.oilPickupGroup.create(i * 400, 500);
     }
   }
 
   createInfo(): void {
-    this.oilText = this.add.text(10, 10, "Oil: 100", {
-      font: "20px Arial",
-      color: "#ffffff"
+    const containerInfo = this.add.container(10, 10);
+
+    this.hpText = this.add.text(0, 0, "", {
+      font: "32px Arial",
+      color: "#ffffff",
+      fontStyle: "bold",
     });
+    containerInfo.add(this.hpText);
+
+    this.oilText = this.add.text(0, 50, "", {
+      font: "32px Arial",
+      color: "#ffffff",
+      fontStyle: "bold",
+    });
+    containerInfo.add(this.oilText);
   }
 
   update(time: number, delta: number): void {
-    if (!this.isGameStarted) {
+    if (!this.isGameStarted || this._gameStatus) {
       return;
     }
 
@@ -294,5 +343,6 @@ export class GameScene extends Scene {
 
   updateInfo(): void {
     this.oilText?.setText(`Oil: ${Math.ceil(this.player.oil.amount)}/${this.player.oil.max}`);
+    this.hpText?.setText(`HP: ${Math.ceil(this.player.health.current)}/${this.player.health.max}`);
   }
 }
