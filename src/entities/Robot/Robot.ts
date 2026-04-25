@@ -23,6 +23,9 @@ export class Robot extends Physics.Arcade.Sprite {
   }
 
   attack(): void {
+    if (!this.scene.cameras.main.worldView.contains(this.x, this.y)) {
+      return;
+    }
     this.lazerGroup.add(new Lazer(this.scene, this.x, this.y).fire({ x: 0, y: 0 }));
   }
 
