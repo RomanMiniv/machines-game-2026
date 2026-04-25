@@ -43,7 +43,6 @@ import musicGameLoopURL from "@assets/audio/music/MUSIC_Gameplay_Placeholder2.og
 
 import buttonSound1URL from "@assets/audio/soundFX/Button1.ogg";
 import buttonSound2URL from "@assets/audio/soundFX/Button2.ogg";
-import buttonSound3URL from "@assets/audio/soundFX/Button3.ogg";
 
 import beetleSoundURL from "@assets/audio/soundFX/Bug_2.ogg";
 
@@ -111,7 +110,6 @@ export class PreloadScene extends Scene {
 
     this.load.audio("soundButton1", buttonSound1URL);
     this.load.audio("soundButton2", buttonSound2URL);
-    this.load.audio("soundButton3", buttonSound3URL);
 
     this.load.audio("beetleSound", beetleSoundURL);
 

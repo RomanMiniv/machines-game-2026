@@ -140,6 +140,7 @@ export class LoreStartScene extends LoreScene {
     });
   }
   async robotAttck(): Promise<void> {
+    this.sound.play("laserSound");
     this.add.image(100, 526, "beam").setOrigin(1);
   }
   async highlightRobotAttack(): Promise<void> {
