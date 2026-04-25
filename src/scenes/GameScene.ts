@@ -35,6 +35,7 @@ export class GameScene extends Scene {
   oilText: GameObjects.Text;
   hpText: GameObjects.Text;
 
+  private readonly _musicVolume = .6;
   private _musicGameStart: Sound.BaseSound | null;
   private _musicGameLoop: Sound.BaseSound | null;
 
@@ -176,10 +177,10 @@ export class GameScene extends Scene {
 
     this._musicGameLoop = this.sound.add("musicGameLoop", { loop: true });
 
-    this._musicGameStart.play({ volume: .8 });
+    this._musicGameStart.play({ volume: this._musicVolume });
 
     this._musicGameStart.once("complete", () => {
-      this._musicGameLoop?.play({ volume: .8 });
+      this._musicGameLoop?.play({ volume: this._musicVolume });
 
       if (this._musicGameStart) {
         this._musicGameStart.destroy();
@@ -283,7 +284,7 @@ export class GameScene extends Scene {
     // pickups
 
     this.physics.add.overlap(this.player, this.oilPickupGroup, (player, obj) => {
-      this.sound.play("oilDropSound");
+      this.sound.play("oilDropSound", { volume: .8 });
       this.player.oil.collect((obj as OilPickup).amount);
       obj.destroy();
     });
@@ -383,7 +384,7 @@ export class GameScene extends Scene {
   }
 
   createInfo(): void {
-    const containerInfo = this.add.container(10, 10);
+    const containerInfo = this.add.container(10, 10).setScrollFactor(0);
 
     this.hpText = this.add.text(0, 0, "", {
       font: "32px Arial",

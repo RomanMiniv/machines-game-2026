@@ -34,6 +34,8 @@ export class LoreManagerScene extends Scene {
 
   private _index = -1;
 
+  private readonly _musicVolume = .6;
+
   private _musicIntroStart: Sound.BaseSound | null;
   private _musicIntroLoop: Sound.BaseSound | null;
 
@@ -55,7 +57,7 @@ export class LoreManagerScene extends Scene {
       await transitionScene.fadeIn();
 
       this._musicOutroLoop = this.sound.add("musicOutroLoop", { loop: true });
-      this._musicOutroLoop.play({ volume: .8 });
+      this._musicOutroLoop.play({ volume: this._musicVolume });
 
       nextScene.scene.resume();
     });
@@ -74,10 +76,10 @@ export class LoreManagerScene extends Scene {
 
     this._musicIntroLoop = this.sound.add("musicIntroLoop", { loop: true });
 
-    this._musicIntroStart.play({ volume: .8 });
+    this._musicIntroStart.play({ volume: this._musicVolume });
 
     this._musicIntroStart.once("complete", () => {
-      this._musicIntroLoop?.play({ volume: .8 });
+      this._musicIntroLoop?.play({ volume: this._musicVolume });
 
       if (this._musicIntroStart) {
         this._musicIntroStart.destroy();

@@ -7,7 +7,7 @@ export class Beetle extends GameObjects.Image {
   }
 
   async move(toPos: Types.Math.Vector2Like, duration: number, captureObject?: GameObjects.Image): Promise<void> {
-    const beetleSound = this.scene.sound.add("beetleSound", { loop: true, volume: .6, });
+    const beetleSound = this.scene.sound.add("beetleSound", { loop: true, volume: .3, });
     beetleSound.play();
 
     const fromX = this.x;
