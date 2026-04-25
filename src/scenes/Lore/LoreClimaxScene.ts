@@ -70,14 +70,24 @@ export class LoreClimaxScene extends LoreScene {
 
   async playGear(): Promise<void> {
     this.createGear();
+    const moveSound = this.sound.add("playerMoveSound", { loop: true });
+    moveSound.play();
     await this.moveGear({ x: 200, y: this.gear.y }, 3000);
+    moveSound.pause();
+
     this.resetGearUpgrade("plaerMagnetGear");
     await this.delayedCallSync(1000);
+
+    moveSound.resume();
     await this.moveGear({ x: 600, y: this.gear.y }, 3000);
+    moveSound.pause();
     this.resetGearUpgrade("playerGear");
     await this.delayedCallSync(1000);
+
+    moveSound.play();
     await this.moveGear({ x: this.gearData.pos.x - 100, y: this.gear.y }, 3000);
     await this.moveGear({ x: this.gearData.pos.x, y: this.gearData.pos.y }, 3000);
+    moveSound.stop();
   }
   createGear(): void {
     this.gear = this.add.image(-150, 800, "playerCoilMagnetGear");
@@ -113,6 +123,9 @@ export class LoreClimaxScene extends LoreScene {
 
       this.time.delayedCall(60, () => {
         const shake = { t: 0 };
+
+        const soundKey: string = textureKey === "plaerMagnetGear" ? "electromagnetSound" : "magnetSound";
+        this.sound.play(soundKey);
 
         this.tweens.add({
           targets: shake,
