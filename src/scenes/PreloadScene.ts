@@ -26,6 +26,7 @@ import coilURL from "@assets/images/stuff/coil.png";
 import robotURL from "@assets/images/entities/robot/robot.png";
 import robotConfig from "@assets/images/entities/robot/robot.json";
 import beamURL from "@assets/images/stuff/beam.png";
+import explosionURL from "@assets/images/entities/explosion.png";
 
 import droneURL from "@assets/images/entities/drone/drone.png";
 import droneConfig from "@assets/images/entities/drone/drone.json";
@@ -42,6 +43,7 @@ import musicGameURL from "@assets/audio/music/MUSIC_Gameplay_#1.ogg";
 import musicGameLoopURL from "@assets/audio/music/MUSIC_Gameplay_Loop.ogg";
 
 import buttonSound1URL from "@assets/audio/soundFX/Button1.ogg";
+import buttonSound1MP3URL from "@assets/audio/soundFX/Button1.mp3";
 import buttonSound2URL from "@assets/audio/soundFX/Button2.ogg";
 
 import beetleSoundURL from "@assets/audio/soundFX/Bug_2.ogg";
@@ -89,6 +91,7 @@ export class PreloadScene extends Scene {
 
     this.load.atlas("robot", robotURL, robotConfig);
     this.load.image("beam", beamURL);
+    this.load.image("explosion", explosionURL);
 
     this.load.atlas("drone", droneURL, droneConfig);
 
@@ -108,7 +111,7 @@ export class PreloadScene extends Scene {
     this.load.audio("musicGame", musicGameURL);
     this.load.audio("musicGameLoop", musicGameLoopURL);
 
-    this.load.audio("soundButton1", buttonSound1URL);
+    this.load.audio("soundButton1", [buttonSound1URL, buttonSound1MP3URL]);
     this.load.audio("soundButton2", buttonSound2URL);
 
     this.load.audio("beetleSound", beetleSoundURL);
@@ -120,7 +123,7 @@ export class PreloadScene extends Scene {
     this.load.audio("magnetSound", magnetSoundURL);
     this.load.audio("oilDropSound", oilDropSoundURL);
 
-    this.load.audio("enemyDestroyedSound", enemyDestroyedSoundURL); // to add
+    this.load.audio("enemyDestroyedSound", enemyDestroyedSoundURL);
     this.load.audio("laserSound", laserSoundURL);
   }
 
