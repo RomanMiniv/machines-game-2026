@@ -37,7 +37,6 @@ export class LoreManagerScene extends Scene {
   private _musicIntroStart: Sound.BaseSound | null;
   private _musicIntroLoop: Sound.BaseSound | null;
 
-  private _musicOutroStart: Sound.BaseSound | null;
   private _musicOutroLoop: Sound.BaseSound | null;
 
   constructor() {
@@ -55,20 +54,8 @@ export class LoreManagerScene extends Scene {
       this.scene.bringToTop("TransitionScene");
       await transitionScene.fadeIn();
 
-      this._musicOutroStart = this.sound.add("musicOutro");
-
       this._musicOutroLoop = this.sound.add("musicOutroLoop", { loop: true });
-
-      this._musicOutroStart.play({ volume: .8 });
-
-      this._musicOutroStart.once("complete", () => {
-        this._musicOutroLoop?.play({ volume: .8 });
-
-        if (this._musicOutroStart) {
-          this._musicOutroStart.destroy();
-          this._musicOutroStart = null;
-        }
-      });
+      this._musicOutroLoop.play({ volume: .8 });
 
       nextScene.scene.resume();
     });
@@ -143,10 +130,6 @@ export class LoreManagerScene extends Scene {
         nextSceneKey = "GameScene";
         break;
       case ELoreSceneKeys.LoreOutroScene:
-        if (this._musicOutroStart) {
-          this._musicOutroStart.stop();
-          this._musicOutroStart = null;
-        }
         if (this._musicOutroLoop) {
           this._musicOutroLoop.stop();
           this._musicOutroLoop = null;
