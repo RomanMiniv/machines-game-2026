@@ -254,7 +254,7 @@ export class Player extends Physics.Arcade.Image {
     const isApex = !isGrounded && Math.abs(body.velocity.y) < 80;
 
     if (this._inputControl.space.isDown && isGrounded) {
-      this.scene.sound.play("playerJumpSound");
+      this.scene.sound.play("playerJumpSound", { volume: 1.4 });
       this.setVelocityY(this._jumpVelocity);
     }
 
