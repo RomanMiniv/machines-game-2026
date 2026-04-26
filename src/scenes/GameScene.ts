@@ -305,19 +305,19 @@ export class GameScene extends Scene {
       obj.destroy();
     });
 
-    // const magnetPickup = new MagnetPickup(this, 500, 500);
-    // this.physics.add.overlap(this.player, magnetPickup, async (player, obj) => {
-    //   (obj as MagnetPickup).disableBody();
-    //   await this.player.upgrade(EUpgradeType.MAGNET);
-    //   obj.destroy();
-    // });
+    const magnetPickup = new MagnetPickup(this, 500, 500);
+    this.physics.add.overlap(this.player, magnetPickup, async (player, obj) => {
+      (obj as MagnetPickup).disableBody();
+      await this.player.upgrade(EUpgradeType.MAGNET);
+      obj.destroy();
+    });
 
-    // const coilPickup = new CoilPickup(this, 1000, 500);
-    // this.physics.add.overlap(this.player, coilPickup, async (player, obj) => {
-    //   (obj as CoilPickup).disableBody();
-    //   await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
-    //   obj.destroy();
-    // });
+    const coilPickup = new CoilPickup(this, 1000, 500);
+    this.physics.add.overlap(this.player, coilPickup, async (player, obj) => {
+      (obj as CoilPickup).disableBody();
+      await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
+      obj.destroy();
+    });
   }
 
   playPlayerForceFiled(obj1: Types.Physics.Arcade.ImageWithDynamicBody, obj2: Types.Physics.Arcade.ImageWithDynamicBody,): void {

@@ -1,4 +1,4 @@
-import { Scene, Physics, Textures } from "phaser";
+import { Scene, Physics, Textures, Sound } from "phaser";
 
 export class Drone extends Physics.Arcade.Sprite {
   private readonly _velocity: number = Phaser.Math.Between(100, 200);
@@ -10,6 +10,8 @@ export class Drone extends Physics.Arcade.Sprite {
 
     this.initAnimations();
   }
+
+  private _moveSound: Sound.BaseSound | null;
 
   initAnimations(): void {
     // TODO: rename textures
@@ -29,6 +31,9 @@ export class Drone extends Physics.Arcade.Sprite {
     }
 
     this.play(animationName);
+
+    this._moveSound = this.scene.sound.add("playerMoveSound", { loop: true });
+    this._moveSound?.play();
   }
 
   kill(): void {
@@ -52,6 +57,12 @@ export class Drone extends Physics.Arcade.Sprite {
     particlesEmitter.explode();
 
     this.scene.time.delayedCall(300, () => {
+      if (this._moveSound) {
+        this._moveSound.stop();
+        this._moveSound.destroy();
+        this._moveSound = null;
+      }
+
       this.destroy();
     });
   }
@@ -68,6 +79,12 @@ export class Drone extends Physics.Arcade.Sprite {
 
     this.setAccelerationX(-this._velocity);
     this.setMaxVelocity(this._velocity);
+
+    if (this.scene.cameras.main.worldView.contains(this.x, this.y)) {
+      this._moveSound?.resume();
+    } else {
+      this._moveSound?.pause();
+    }
 
     this.setDrag(.01);
     this.setDamping(true);

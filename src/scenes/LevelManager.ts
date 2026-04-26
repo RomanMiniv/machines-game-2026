@@ -76,6 +76,7 @@ export class LevelManager {
           { type: "ground", pos: { x: 1500, y: height }, amount: 1 },
           { type: "ground", pos: { x: 1800, y: height }, amount: 1, scale: { x: .4, y: 1 } },
           // { type: "oil", pos: { x: 1000, y: 600 }, amount: 2, step: { x: 200, y: 0 } },
+          { type: "robot", pos: { x: 1000, y: 600 }, amount: 2, step: { x: 200, y: 0 } },
         ],
       },
       {
