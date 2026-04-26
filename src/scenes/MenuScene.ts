@@ -11,12 +11,13 @@ export class MenuScene extends Scene {
   }
 
   create() {
+    const buttonSoundVolume: number = .4;
     this.menuUI = new MenuUI(this, {
       buttons: [
         {
           label: "PLAY",
           onClick: () => {
-            this.sound.play("soundButton1", { volume: .5 });
+            this.sound.play("soundButton1", { volume: buttonSoundVolume });
             this.scene.start("LoreManagerScene");
             // this.scene.start("GameScene");
           }
@@ -24,14 +25,14 @@ export class MenuScene extends Scene {
         {
           label: "OPTIONS",
           onClick: () => {
-            this.sound.play("soundButton1", { volume: .5 });
+            this.sound.play("soundButton1", { volume: buttonSoundVolume });
             this.scene.start("OptionsScene");
           }
         },
         {
           label: "CREDITS",
           onClick: () => {
-            this.sound.play("soundButton1", { volume: .5 });
+            this.sound.play("soundButton1", { volume: buttonSoundVolume });
             this.scene.start("CreditsScene");
           }
         }

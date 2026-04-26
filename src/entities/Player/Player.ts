@@ -91,12 +91,13 @@ export class Player extends Physics.Arcade.Image {
     await new Promise<void>(resolve => {
       const newTexture: string = this._upgradeState.textures[upgradeType];
 
+      const upgradeSoundVolume: number = 1.2;
       switch (upgradeType) {
         case EUpgradeType.MAGNET:
-          this.scene.sound.play("magnetSound");
+          this.scene.sound.play("magnetSound", { volume: upgradeSoundVolume });
           break;
         case EUpgradeType.ELECTROMAGNET:
-          this.scene.sound.play("electromagnetSound");
+          this.scene.sound.play("electromagnetSound", { volume: upgradeSoundVolume });
           break;
       }
 
@@ -259,7 +260,7 @@ export class Player extends Physics.Arcade.Image {
     const isApex = !isGrounded && Math.abs(body.velocity.y) < 80;
 
     if (this._inputControl.space.isDown && isGrounded) {
-      this.scene.sound.play("playerJumpSound", { volume: 1.4 });
+      this.scene.sound.play("playerJumpSound", { volume: 1.6 });
       this.setVelocityY(this._jumpVelocity);
     }
 

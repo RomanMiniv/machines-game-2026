@@ -36,7 +36,7 @@ export class GameScene extends Scene {
   oilText: GameObjects.Text;
   hpText: GameObjects.Text;
 
-  private readonly _musicVolume = .6;
+  private readonly _musicVolume = .5;
   private _musicGameStart: Sound.BaseSound | null;
   private _musicGameLoop: Sound.BaseSound | null;
 
@@ -112,6 +112,7 @@ export class GameScene extends Scene {
     switch (gameStatus) {
       case EGameStatus.LOST:
         {
+          const buttonSoundVolume: number = .4;
           const popupData: IPopupData = {
             title: "Game Over",
             menuConfig: {
@@ -119,7 +120,7 @@ export class GameScene extends Scene {
                 {
                   label: "Retry",
                   onClick: () => {
-                    this.sound.play("soundButton1", { volume: .5 });
+                    this.sound.play("soundButton1", { volume: buttonSoundVolume });
                     this.scene.stop("PopupScene");
                     this.reset();
                     this.scene.restart();
@@ -128,7 +129,7 @@ export class GameScene extends Scene {
                 {
                   label: "Quit Game",
                   onClick: () => {
-                    this.sound.play("soundButton1", { volume: .5 });
+                    this.sound.play("soundButton1", { volume: buttonSoundVolume });
                     this.scene.stop("PopupScene");
                     this.scene.start("MenuScene");
                   },
@@ -233,6 +234,7 @@ export class GameScene extends Scene {
     this._inputControl.pause.on("down", () => {
       this.scene.pause("GameScene");
 
+      const buttonSoundVolume: number = .4;
       const popupData: IPopupData = {
         title: "Pause",
         menuConfig: {
@@ -240,7 +242,7 @@ export class GameScene extends Scene {
             {
               label: "Resume",
               onClick: () => {
-                this.sound.play("soundButton1", { volume: .5 });
+                this.sound.play("soundButton1", { volume: buttonSoundVolume });
                 this.scene.stop("PopupScene");
                 this.scene.resume("GameScene");
               },
@@ -248,7 +250,7 @@ export class GameScene extends Scene {
             {
               label: "Quit Game",
               onClick: () => {
-                this.sound.play("soundButton1", { volume: .5 });
+                this.sound.play("soundButton1", { volume: buttonSoundVolume });
                 this.scene.stop("PopupScene");
                 this.scene.start("MenuScene");
               },

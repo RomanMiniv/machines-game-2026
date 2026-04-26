@@ -41,7 +41,7 @@ export class LoreResolutionScene extends LoreScene {
 
   async kill(pos: Types.Math.Vector2Like, scale: number, animationScale: number): Promise<void> {
     await new Promise<void>(resolve => {
-      this.sound.play("enemyDestroyedSound");
+      this.sound.play("enemyDestroyedSound", { volume: .5 });
 
       this.cameras.main.shake(100, 0.01);
 

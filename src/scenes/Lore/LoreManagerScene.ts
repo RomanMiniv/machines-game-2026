@@ -34,7 +34,7 @@ export class LoreManagerScene extends Scene {
 
   private _index = -1;
 
-  private readonly _musicVolume = .6;
+  private readonly _musicVolume = .7;
 
   private _musicIntroStart: Sound.BaseSound | null;
   private _musicIntroLoop: Sound.BaseSound | null;
