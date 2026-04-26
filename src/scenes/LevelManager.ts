@@ -53,6 +53,7 @@ export class LevelManager {
         items: [
           { type: "ground", pos: { x: 0, y: height }, amount: 6, step: { x: 300, y: 0 } },
           { type: "ground", pos: { x: 1800, y: height }, amount: 1, scale: { x: .4, y: 1 } },
+          { type: "drone", pos: { x: 2500, y: 200 }, amount: 1 },
         ],
       },
       {
