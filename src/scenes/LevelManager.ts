@@ -38,7 +38,7 @@ export class LevelManager {
     return this._currentChunkIndex;
   }
 
-  private _checkpoints: number[] = [3840, 9600];
+  private _checkpoints: number[] = [3840, 9600, 14260];
   getCheckpointPos(playerPosX: number): Types.Math.Vector2Like {
     const availableCheckpoints = this._checkpoints.filter(checkpoint => checkpoint <= playerPosX);
     if (availableCheckpoints?.length) {
@@ -64,8 +64,6 @@ export class LevelManager {
         items: [
           { type: "ground", pos: { x: 0, y: height }, amount: 6, step: { x: 300, y: 0 } },
           { type: "ground", pos: { x: 1800, y: height }, amount: 1, scale: { x: .4, y: 1 } },
-          // { type: "magent", pos: { x: 500, y: 500 }, amount: 1 },
-          // { type: "coil", pos: { x: 1000, y: 500 }, amount: 1 },
         ],
       },
       {
@@ -74,8 +72,6 @@ export class LevelManager {
           { type: "ground", pos: { x: 0, y: height }, amount: 3, step: { x: 300, y: 0 } },
           { type: "ground", pos: { x: 1200, y: height }, amount: 1 },
           { type: "ground", pos: { x: 1800, y: height }, amount: 1, scale: { x: .4, y: 1 } },
-
-          // { type: "oil", pos: { x: 1860, y: height - 300 }, amount: 1 },
         ],
       },
       {
@@ -83,12 +79,9 @@ export class LevelManager {
         items: [
           { type: "ground", pos: { x: 0, y: height }, amount: 1 },
 
-          // { type: "oil", pos: { x: 150, y: height - 300 }, amount: 1 },
-
           { type: "ground", pos: { x: 900, y: height }, amount: 1 },
           { type: "ground", pos: { x: 1500, y: height }, amount: 1 },
           { type: "ground", pos: { x: 1800, y: height }, amount: 1, scale: { x: .4, y: 1 } },
-          // { type: "oil", pos: { x: 1000, y: 600 }, amount: 2, step: { x: 200, y: 0 } },
         ],
       },
       {
@@ -101,7 +94,6 @@ export class LevelManager {
           { type: "ground", pos: { x: 1200, y: height - 150 * 4 }, amount: 1 },
 
           { type: "drone", pos: { x: 1650, y: height - 150 * 6 }, amount: 1 },
-          // { type: "oil", pos: { x: 1000, y: 600 }, amount: 2, step: { x: 200, y: 0 } },
         ],
       },
       {
@@ -139,31 +131,78 @@ export class LevelManager {
       {
         id: 7,
         items: [
+          { type: "ground", pos: { x: 0, y: height }, amount: 6, step: { x: 300, y: 0 } },
+          { type: "ground", pos: { x: 1800, y: height }, amount: 1, step: { x: 0, y: 0 }, scale: { x: .4, y: 1 } },
 
+          { type: "magent", pos: { x: 1500, y: 500 }, amount: 1 },
         ],
       },
       {
         id: 8,
         items: [
+          { type: "ground", pos: { x: 0, y: height }, amount: 6, step: { x: 300, y: 0 } },
+          { type: "ground", pos: { x: 1800, y: height }, amount: 1, step: { x: 0, y: 0 }, scale: { x: .4, y: 1 } },
 
+          { type: "robot", pos: { x: 1000, y: height - 500 }, amount: 1 },
         ],
       },
       {
         id: 9,
         items: [
+          { type: "ground", pos: { x: 600, y: height }, amount: 4, step: { x: 300, y: 0 } },
+          { type: "ground", pos: { x: 1800, y: height }, amount: 1, step: { x: 0, y: 0 }, scale: { x: .4, y: 1 } },
 
+          { type: "coil", pos: { x: 1400, y: 500 }, amount: 1 },
+
+          { type: "oil", pos: { x: 1250, y: height - 300 }, amount: 2, step: { x: 300, y: 0 } },
         ],
       },
       {
         id: 10,
         items: [
+          { type: "ground", pos: { x: 200, y: height - 150 }, amount: 3, step: { x: 350, y: -150 }, scale: { x: .4, y: 1 } },
+          { type: "ground", pos: { x: 350 * 3 + 200, y: height - 150 * 3 }, amount: 1, step: { x: 350, y: -150 }, scale: { x: .4, y: 1 } },
+          { type: "ground", pos: { x: 1600, y: height }, amount: 1, step: { x: 300, y: 0 } },
 
+          { type: "drone", pos: { x: 1900, y: height - 750 }, amount: 1 },
+          { type: "drone", pos: { x: 2000, y: height - 800 }, amount: 1 },
+          { type: "drone", pos: { x: 2100, y: height - 850 }, amount: 1 },
+          { type: "drone", pos: { x: 2200, y: height - 900 }, amount: 1 },
         ],
       },
       {
         id: 11,
         items: [
+          { type: "ground", pos: { x: 600, y: height }, amount: 5, step: { x: 300, y: 0 } },
+          { type: "ground", pos: { x: 1800, y: height }, amount: 1, step: { x: 0, y: 0 }, scale: { x: .4, y: 1 } },
+        ],
+      },
+      {
+        id: 12,
+        items: [
+          { type: "ground", pos: { x: 600, y: height }, amount: 5, step: { x: 300, y: 0 } },
+          { type: "ground", pos: { x: 1800, y: height }, amount: 1, step: { x: 0, y: 0 }, scale: { x: .4, y: 1 } },
 
+          { type: "drone", pos: { x: 1500, y: height - 250 }, amount: 1 },
+          { type: "drone", pos: { x: 1600, y: height - 300 }, amount: 1 },
+          { type: "drone", pos: { x: 1700, y: height - 350 }, amount: 1 },
+          { type: "drone", pos: { x: 1800, y: height - 400 }, amount: 1 },
+        ],
+      },
+      {
+        id: 13,
+        items: [
+          { type: "ground", pos: { x: 0, y: height }, amount: 6, step: { x: 300, y: 0 } },
+          { type: "ground", pos: { x: 1800, y: height }, amount: 1, step: { x: 0, y: 0 }, scale: { x: .4, y: 1 } },
+
+          { type: "robot", pos: { x: 1000, y: height - 500 }, step: { x: 300, y: 50 }, amount: 2 },
+        ],
+      },
+      {
+        id: 14,
+        items: [
+          { type: "ground", pos: { x: 0, y: height }, amount: 6, step: { x: 300, y: 0 } },
+          { type: "ground", pos: { x: 1800, y: height }, amount: 1, step: { x: 0, y: 0 }, scale: { x: .4, y: 1 } },
         ],
       },
     ];

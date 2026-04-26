@@ -7,6 +7,8 @@ export class Robot extends Physics.Arcade.Sprite {
 
   lazerGroup: Physics.Arcade.Group;
 
+  private _attackTimer: Phaser.Time.TimerEvent;
+
   constructor(scene: Scene, x: number, y: number, texture?: string | Textures.Texture, frame?: string | number) {
     super(scene, x, y, texture ?? "robot", frame);
     this.setScale(.7);
@@ -17,6 +19,17 @@ export class Robot extends Physics.Arcade.Sprite {
 
   init(lazerGroup: Physics.Arcade.Group) {
     this.lazerGroup = lazerGroup;
+
+    this._attackTimer = this.scene.time.addEvent({
+      delay: 5000,
+      callback: () => {
+        if (Phaser.Math.Between(0, 1)) {
+          this.attack();
+        }
+      },
+      callbackScope: this,
+      loop: true
+    });
   }
 
   attack(): void {
@@ -28,7 +41,7 @@ export class Robot extends Physics.Arcade.Sprite {
 
   kill(): void {
     (this.body as Phaser.Physics.Arcade.Body).enable = false;
-
+    this._attackTimer.destroy();
     this.scene.sound.play("enemyDestroyedSound");
 
     this.scene.cameras.main.shake(100, 0.01);
@@ -61,6 +74,10 @@ export class Robot extends Physics.Arcade.Sprite {
     this.setAccelerationX(this._velocity * this._direction);
     this.setMaxVelocity(this._velocity);
 
+    if (!this.isMovable()) {
+      this.setMaxVelocity(0);
+    }
+
     const body = this.body as Phaser.Physics.Arcade.Body;
     if (body.blocked.right) {
       this._direction = -1;
@@ -73,5 +90,24 @@ export class Robot extends Physics.Arcade.Sprite {
 
     this.setDrag(.01);
     this.setDamping(true);
+
+    if (this.y + this.displayHeight / 2 >= this.scene.scale.height - 10) {
+      this.kill();
+    }
+  }
+
+  isMovable(): boolean {
+    const offsetX = this.displayWidth * 2;
+    const offsetY = this.displayHeight * 2;
+
+    const cameraView = this.scene.cameras.main.worldView;
+
+    const isInCameraView =
+      this.x >= cameraView.x - offsetX &&
+      this.x <= cameraView.x + cameraView.width + offsetX &&
+      this.y >= cameraView.y - offsetY &&
+      this.y <= cameraView.y + cameraView.height + offsetY;
+
+    return isInCameraView;
   }
 }

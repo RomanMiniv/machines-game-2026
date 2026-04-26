@@ -34,8 +34,8 @@ export class GameScene extends Scene {
 
   oilPickupGroup: Physics.Arcade.StaticGroup;
 
-  magnetPickup: MagnetPickup;
-  coilPickup: CoilPickup;
+  magnetPickup: MagnetPickup | null;
+  coilPickup: CoilPickup | null;
 
   oilText: GameObjects.Text;
   hpText: GameObjects.Text;
@@ -72,6 +72,8 @@ export class GameScene extends Scene {
   reset(): void {
     this.isGameStarted = false;
     this._gameStatus = EGameStatus.START;
+    this.magnetPickup = null;
+    this.coilPickup = null;
   }
 
   create() {
@@ -476,6 +478,7 @@ export class GameScene extends Scene {
     const data = {
       chunkIndex: this.levelManager.currentChunkIndex,
       playerX: this.levelManager.getCheckpointPos(playerX).x,
+      // upgradeType: this.player.getCurrentUpgradeType(),
       playerY: 600,
       hp: this.player.health.max / 2,
       oil: this.player.oil.max / 2,
@@ -495,6 +498,9 @@ export class GameScene extends Scene {
     this.player.setPosition(data.playerX, data.playerY);
     this.player.health.current = data.hp;
     this.player.oil.amount = data.oil;
+    // if (data.upgradeType !== EUpgradeType.DEFAULT) {
+    //   this.player.upgrade(data.upgradeType);
+    // }
 
     for (let i = 0; i <= data.chunkIndex; i++) {
       this.levelManager.spawnChunk(i);

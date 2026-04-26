@@ -1,7 +1,7 @@
 import { Scene, Physics, Textures, Sound } from "phaser";
 
 export class Drone extends Physics.Arcade.Sprite {
-  private readonly _velocity: number = Phaser.Math.Between(100, 200);
+  private readonly _velocity: number = Phaser.Math.Between(150, 250);
 
   constructor(scene: Scene, x: number, y: number, texture?: string | Textures.Texture, frame?: string | number) {
     super(scene, x, y, texture ?? "drone", frame);
