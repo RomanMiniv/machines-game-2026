@@ -8,7 +8,6 @@ export class LoreStartScene extends LoreScene {
   robot: GameObjects.Sprite;
 
   narrativeTexts: string[] = [
-    "Need some coffee.",
     "Oh shit."
   ];
 
@@ -27,14 +26,15 @@ export class LoreStartScene extends LoreScene {
     this._actionSysyem.init([
       async () => {
         await this.delayedCallSync(1000);
+        const keyboardTypingSound = this.sound.add("keyboardTypingSound", { loop: true });
+        keyboardTypingSound.play();
         await this.playComputerScript(4000, 0x00ff00, 270);
         await this.playComputerScript(4000, 0x00ff00, 270, { x: 0, y: 20 });
+        keyboardTypingSound.stop();
       },
       async () => {
-        await this.showText(this.narrativeTexts[0]);
         await this.delayedCallSync(1000);
         await this.moveProgrammer(8000, this.programmer.x + 800);
-        await this.hideText();
       },
       async () => {
         await this.playComputerScript(1000, 0x00ff00, 70, { x: 0, y: 40 });
@@ -44,7 +44,7 @@ export class LoreStartScene extends LoreScene {
       },
       async () => {
         await this.moveProgrammer(8000, this.programmer.x - 800);
-        await this.showText(this.narrativeTexts[1]);
+        await this.showText(this.narrativeTexts[0]);
         await this.delayedCallSync(2000);
       },
       async () => {

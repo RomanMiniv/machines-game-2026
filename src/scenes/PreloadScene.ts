@@ -88,6 +88,18 @@ import enemyDestroyedSoundFallbackURL from "@assets/audio/soundFX/Enemy_Destroye
 import laserSoundURL from "@assets/audio/soundFX/Laser3.ogg";
 import laserSoundFallbackURL from "@assets/audio/soundFX/Laser3.mp3";
 
+import keyboardTypingURL from "@assets/audio/soundFX/Keyboard_Typing.ogg";
+import keyboardTypingFallbackURL from "@assets/audio/soundFX/Keyboard_Typing.mp3";
+
+import machineURL from "@assets/audio/soundFX/Machine.ogg";
+import machineFallbackURL from "@assets/audio/soundFX/Machine.mp3";
+
+import switchURL from "@assets/audio/soundFX/Switch.ogg";
+import switchFallbackURL from "@assets/audio/soundFX/Switch.mp3";
+
+import wrenchURL from "@assets/audio/soundFX/Wrench.ogg";
+import wrenchFallbackURL from "@assets/audio/soundFX/Wrench.mp3";
+
 export class PreloadScene extends Scene {
   constructor() {
     super({
@@ -158,6 +170,11 @@ export class PreloadScene extends Scene {
 
     this.load.audio("enemyDestroyedSound", [enemyDestroyedSoundURL, enemyDestroyedSoundFallbackURL]);
     this.load.audio("laserSound", [laserSoundURL, laserSoundFallbackURL]);
+
+    this.load.audio("keyboardTypingSound", [keyboardTypingURL, keyboardTypingFallbackURL]);
+    this.load.audio("machineSound", [machineURL, machineFallbackURL]);
+    this.load.audio("switchSound", [switchURL, switchFallbackURL]);
+    this.load.audio("wrenchSound", [wrenchURL, wrenchFallbackURL]);
   }
 
   create() {

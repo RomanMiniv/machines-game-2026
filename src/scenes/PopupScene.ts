@@ -1,4 +1,4 @@
-import { Scene } from "phaser";
+import { Scene, Sound } from "phaser";
 import { IMenuConfig, MenuUI } from "../components/MenuUI";
 
 export interface IPopupData {
@@ -8,6 +8,7 @@ export interface IPopupData {
 
 export class PopupScene extends Scene {
   protected menuUI: MenuUI;
+  protected _wrenchSound: Sound.BaseSound | null;
 
   constructor() {
     super({
@@ -49,6 +50,8 @@ export class PopupScene extends Scene {
       });
     }
 
+    this._wrenchSound = this.sound.add("wrenchSound", { loop: true });
+    this._wrenchSound.play();
     engeneer.play(animationName);
   }
 
@@ -71,6 +74,11 @@ export class PopupScene extends Scene {
 
     this.events.once("shutdown", () => {
       this.menuUI.destroy();
+
+      if (this._wrenchSound) {
+        this._wrenchSound.stop();
+        this._wrenchSound = null;
+      }
     });
   }
 

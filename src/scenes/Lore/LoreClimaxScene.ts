@@ -156,11 +156,14 @@ export class LoreClimaxScene extends LoreScene {
   }
 
   async playSuperMachine(): Promise<void> {
+    this.sound.play("machineSound");
     await this.startSuperMachine(500);
     await this.delayedCallSync(1000);
+
     const camera = this.cameras.main;
     await this.moveCamera(3000, { x: this.superMachine.width - this.scale.width + this.scale.width / 2, y: camera.midPoint.y });
     await this.delayedCallSync(1000);
+    this.sound.play("switchSound");
     this.switcher.setTexture("switchOff");
     this.switcherText.setText("OFF");
     await this.delayedCallSync(1000);
