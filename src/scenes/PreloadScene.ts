@@ -100,8 +100,11 @@ import switchFallbackURL from "@assets/audio/soundFX/Switch.mp3";
 import wrenchURL from "@assets/audio/soundFX/Wrench.ogg";
 import wrenchFallbackURL from "@assets/audio/soundFX/Wrench.mp3";
 
-import droneSoundURL from "@assets/audio/soundFX/Flying_Sound.ogg";
-import droneSoundFallbackURL from "@assets/audio/soundFX/Flying_Sound.mp3";
+// import droneSoundURL from "@assets/audio/soundFX/Flying_Sound.ogg";
+// import droneSoundFallbackURL from "@assets/audio/soundFX/Flying_Sound.mp3";
+
+import droneSoundURL from "@assets/audio/soundFX/Flying_Sound_V2.ogg";
+import droneSoundFallbackURL from "@assets/audio/soundFX/Flying_Sound_V2.mp3";
 
 export class PreloadScene extends Scene {
   constructor() {
