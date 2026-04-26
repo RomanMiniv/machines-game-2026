@@ -50,7 +50,7 @@ export class PopupScene extends Scene {
       });
     }
 
-    this._wrenchSound = this.sound.add("wrenchSound", { loop: true });
+    this._wrenchSound = this.sound.add("wrenchSound", { loop: true, volume: .7, });
     this._wrenchSound.play();
     engeneer.play(animationName);
   }

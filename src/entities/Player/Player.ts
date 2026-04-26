@@ -91,13 +91,12 @@ export class Player extends Physics.Arcade.Image {
     await new Promise<void>(resolve => {
       const newTexture: string = this._upgradeState.textures[upgradeType];
 
-      const upgradeSoundVolume: number = 1.2;
       switch (upgradeType) {
         case EUpgradeType.MAGNET:
-          this.scene.sound.play("magnetSound", { volume: upgradeSoundVolume });
+          this.scene.sound.play("magnetSound", { volume: 1.1 });
           break;
         case EUpgradeType.ELECTROMAGNET:
-          this.scene.sound.play("electromagnetSound", { volume: upgradeSoundVolume });
+          this.scene.sound.play("electromagnetSound", { volume: 1.3 });
           break;
       }
 

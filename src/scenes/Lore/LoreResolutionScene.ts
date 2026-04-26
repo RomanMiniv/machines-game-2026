@@ -34,9 +34,18 @@ export class LoreResolutionScene extends LoreScene {
   }
 
   async destroyMachines(): Promise<void> {
-    await this.kill({ x: 1450, y: 850 }, 1, 2);
-    await this.kill({ x: 900, y: 600 }, .8, 1.5);
-    // TODO: destroy all be pos/scale
+    await this.kill({ x: 1467, y: 810 }, 1, 2);
+
+    await this.kill({ x: 1794, y: 207 }, .4, .8);
+    await this.kill({ x: 1715, y: 220 }, .4, .8);
+    await this.kill({ x: 1744, y: 161 }, .4, .8);
+
+    await this.kill({ x: 936, y: 566 }, .8, 1.5);
+
+    await this.kill({ x: 1086, y: 334 }, .4, .8);
+
+    await this.kill({ x: 1386, y: 296 }, .2, .4);
+    await this.kill({ x: 1400, y: 284 }, .2, .4);
   }
 
   async kill(pos: Types.Math.Vector2Like, scale: number, animationScale: number): Promise<void> {

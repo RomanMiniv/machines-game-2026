@@ -14,7 +14,7 @@ export class Lazer extends Physics.Arcade.Image {
   }
 
   fire(targetPos: Types.Math.Vector2Like) {
-    this.scene.sound.play("laserSound", { volume: .5 });
+    this.scene.sound.play("laserSound", { volume: .2 });
     this._targetPos = targetPos;
     this._direction = Math.sign(this._targetPos.x - this.x);
 

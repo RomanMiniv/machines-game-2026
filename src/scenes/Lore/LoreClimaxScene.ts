@@ -125,7 +125,8 @@ export class LoreClimaxScene extends LoreScene {
         const shake = { t: 0 };
 
         const soundKey: string = textureKey === "plaerMagnetGear" ? "electromagnetSound" : "magnetSound";
-        this.sound.play(soundKey);
+        const soundVolume: number = textureKey === "plaerMagnetGear" ? 1.3 : 1.1;
+        this.sound.play(soundKey, { volume: soundVolume });
 
         this.tweens.add({
           targets: shake,

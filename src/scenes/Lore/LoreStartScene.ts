@@ -26,7 +26,7 @@ export class LoreStartScene extends LoreScene {
     this._actionSysyem.init([
       async () => {
         await this.delayedCallSync(1000);
-        const keyboardTypingSound = this.sound.add("keyboardTypingSound", { loop: true });
+        const keyboardTypingSound = this.sound.add("keyboardTypingSound", { loop: true, volume: .8, });
         keyboardTypingSound.play();
         await this.playComputerScript(4000, 0x00ff00, 270);
         await this.playComputerScript(4000, 0x00ff00, 270, { x: 0, y: 20 });

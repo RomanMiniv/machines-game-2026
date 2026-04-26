@@ -91,7 +91,7 @@ export abstract class LoreScene extends Scene {
   waitClick(): Promise<void> {
     return new Promise<void>(resolve => {
       this.input.once("pointerdown", () => {
-        this.sound.play("soundButton2", { volume: .6 });
+        this.sound.play("soundButton2", { volume: .5 });
         resolve();
       });
     });
