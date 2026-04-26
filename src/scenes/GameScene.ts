@@ -63,7 +63,6 @@ export class GameScene extends Scene {
             x: 0,
             y: 1200,
           },
-          debug: true,
         }
       },
     });
