@@ -16,26 +16,26 @@ export class MenuScene extends Scene {
     this.menuUI = new MenuUI(this, {
       buttons: [
         {
-          label: "START NEW GAME",
+          label: "PLAY",
           onClick: () => {
             this.sound.play("soundButton1", { volume: buttonSoundVolume });
             this.scene.start("LoreManagerScene");
           }
         },
-        {
-          label: "OPTIONS",
-          onClick: () => {
-            this.sound.play("soundButton1", { volume: buttonSoundVolume });
-            this.scene.start("OptionsScene");
-          }
-        },
-        {
-          label: "CREDITS",
-          onClick: () => {
-            this.sound.play("soundButton1", { volume: buttonSoundVolume });
-            this.scene.start("CreditsScene");
-          }
-        }
+        // {
+        //   label: "OPTIONS",
+        //   onClick: () => {
+        //     this.sound.play("soundButton1", { volume: buttonSoundVolume });
+        //     this.scene.start("OptionsScene");
+        //   }
+        // },
+        // {
+        //   label: "CREDITS",
+        //   onClick: () => {
+        //     this.sound.play("soundButton1", { volume: buttonSoundVolume });
+        //     this.scene.start("CreditsScene");
+        //   }
+        // }
       ]
     });
     this.menuUI.create();
