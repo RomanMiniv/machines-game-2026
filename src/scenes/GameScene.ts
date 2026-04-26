@@ -114,7 +114,7 @@ export class GameScene extends Scene {
   }
 
   async setGameOver(gameStatus: EGameStatus): Promise<void> {
-    this.saveGame();
+    // this.saveGame();
     switch (gameStatus) {
       case EGameStatus.LOST:
         {
@@ -275,7 +275,7 @@ export class GameScene extends Scene {
 
     this._inputControl.restart.on("down", () => {
       this.reset();
-      this.saveGame();
+      // this.saveGame();
       this.scene.restart();
     });
   }
@@ -349,21 +349,22 @@ export class GameScene extends Scene {
   }
 
   createPlayer(): void {
-    const data = JSON.parse(localStorage.getItem("autoSave")!);
-    if (!data?.playerX) {
-      this.player = new Player(this, 100, 400).setAlpha(0);
-    } else {
-      this.player = new Player(this, 100, 400);
-    }
+    // const data = JSON.parse(localStorage.getItem("autoSave")!);
+    // if (!data?.playerX) {
+    //   this.player = new Player(this, 100, 400).setAlpha(0);
+    // } else {
+    //   this.player = new Player(this, 100, 400);
+    // }
+    this.player = new Player(this, 100, 400).setAlpha(0);
   }
 
   async playBeetle(): Promise<void> {
-    const data = JSON.parse(localStorage.getItem("autoSave")!);
-    if (data?.playerX) {
-      this.loadGame();
-      this.player.isStarted = true;
-      return;
-    }
+    // const data = JSON.parse(localStorage.getItem("autoSave")!);
+    // if (data?.playerX) {
+    //   this.loadGame();
+    //   this.player.isStarted = true;
+    //   return;
+    // }
 
     const beetle = new Beetle(this, -100, -100);
     this.player.setPosition(beetle.x, beetle.y).setAlpha(1);
@@ -470,41 +471,41 @@ export class GameScene extends Scene {
     this.hpText?.setText(`HP: ${Math.ceil(this.player.health.current)}/${this.player.health.max}`);
   }
 
-  saveGame(): void {
-    return;
-    const storedData = JSON.parse(localStorage.getItem("autoSave")!);
-    const playerX: number = Math.max(storedData?.playerX ?? 0, this.player.x);
+  // saveGame(): void {
+  //   return;
+  //   const storedData = JSON.parse(localStorage.getItem("autoSave")!);
+  //   const playerX: number = Math.max(storedData?.playerX ?? 0, this.player.x);
 
-    const data = {
-      chunkIndex: this.levelManager.currentChunkIndex,
-      playerX: this.levelManager.getCheckpointPos(playerX).x,
-      // upgradeType: this.player.getCurrentUpgradeType(),
-      playerY: 600,
-      hp: this.player.health.max / 2,
-      oil: this.player.oil.max / 2,
-    };
+  //   const data = {
+  //     chunkIndex: this.levelManager.currentChunkIndex,
+  //     playerX: this.levelManager.getCheckpointPos(playerX).x,
+  //     // upgradeType: this.player.getCurrentUpgradeType(),
+  //     playerY: 600,
+  //     hp: this.player.health.max / 2,
+  //     oil: this.player.oil.max / 2,
+  //   };
 
-    localStorage.setItem("autoSave", JSON.stringify(data));
-  }
-  loadGame(): void {
-    return;
-    const data = JSON.parse(localStorage.getItem("autoSave")!);
-    if (!data) {
-      return;
-    }
-    if (!data.playerX) {
-      return;
-    }
+  //   localStorage.setItem("autoSave", JSON.stringify(data));
+  // }
+  // loadGame(): void {
+  //   return;
+  //   const data = JSON.parse(localStorage.getItem("autoSave")!);
+  //   if (!data) {
+  //     return;
+  //   }
+  //   if (!data.playerX) {
+  //     return;
+  //   }
 
-    this.player.setPosition(data.playerX, data.playerY);
-    this.player.health.current = data.hp;
-    this.player.oil.amount = data.oil;
-    // if (data.upgradeType !== EUpgradeType.DEFAULT) {
-    //   this.player.upgrade(data.upgradeType);
-    // }
+  //   this.player.setPosition(data.playerX, data.playerY);
+  //   this.player.health.current = data.hp;
+  //   this.player.oil.amount = data.oil;
+  //   // if (data.upgradeType !== EUpgradeType.DEFAULT) {
+  //   //   this.player.upgrade(data.upgradeType);
+  //   // }
 
-    for (let i = 0; i <= data.chunkIndex; i++) {
-      this.levelManager.spawnChunk(i);
-    }
-  }
+  //   for (let i = 0; i <= data.chunkIndex; i++) {
+  //     this.levelManager.spawnChunk(i);
+  //   }
+  // }
 }
