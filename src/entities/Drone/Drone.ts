@@ -32,7 +32,7 @@ export class Drone extends Physics.Arcade.Sprite {
 
     this.play(animationName);
 
-    this._moveSound = this.scene.sound.add("playerMoveSound", { loop: true });
+    this._moveSound = this.scene.sound.add("playerMoveSound", { loop: true, volume: .8, });
     this._moveSound?.play();
   }
 
