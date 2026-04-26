@@ -471,6 +471,7 @@ export class GameScene extends Scene {
   }
 
   saveGame(): void {
+    return;
     const storedData = JSON.parse(localStorage.getItem("autoSave")!);
     const playerX: number = Math.max(storedData?.playerX ?? 0, this.player.x);
 
@@ -486,6 +487,7 @@ export class GameScene extends Scene {
     localStorage.setItem("autoSave", JSON.stringify(data));
   }
   loadGame(): void {
+    return;
     const data = JSON.parse(localStorage.getItem("autoSave")!);
     if (!data) {
       return;
