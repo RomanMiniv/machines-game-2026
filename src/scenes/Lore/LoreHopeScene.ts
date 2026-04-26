@@ -51,7 +51,6 @@ export class LoreHopeScene extends LoreScene {
       async () => {
         await this.beetle.move({ x: 1700, y: -198 }, 5000, this.gear);
         this.gear.destroy();
-        this.gear.destroy();
 
         await this.showText(this.narrativeTexts[3], { isSkipped: true });
         await this.waitClick();

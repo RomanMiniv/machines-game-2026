@@ -9,6 +9,7 @@ import { TransitionScene } from "./TransitionScene";
 import { Beetle } from "../entities/Beetle/Beetle";
 import { RobotManager } from "../entities/Robot/RobotManager";
 import { IPopupData } from "./PopupScene";
+import { LevelManager } from "./LevelManager";
 
 export enum EGameStatus {
   START,
@@ -42,6 +43,11 @@ export class GameScene extends Scene {
   private _gameStatus: EGameStatus;
 
   private _inputControl!: IInputControl;
+
+  private levelManager: LevelManager;
+
+  private _backgroundSky: GameObjects.TileSprite;
+  private _backgroundCity: GameObjects.TileSprite;
 
   constructor() {
     super({
@@ -89,11 +95,10 @@ export class GameScene extends Scene {
       this.setGameOver(gameStatus);
     });
 
-    this.input.once("pointerdown", async () => {
-      this.setGameOver(EGameStatus.WIN);
-    });
+    this.createBackgrounds();
 
-    this.createBackground();
+    this.initGround();
+
     this.createMap();
 
     this.initMusic();
@@ -115,6 +120,7 @@ export class GameScene extends Scene {
                   label: "Retry",
                   onClick: () => {
                     this.sound.play("soundButton1", { volume: .5 });
+                    this.scene.stop("PopupScene");
                     this.reset();
                     this.scene.restart();
                   },
@@ -142,6 +148,7 @@ export class GameScene extends Scene {
           await transitionScene.fadeOut();
 
           this.scene.stop("GameScene");
+          this.reset();
           this.scene.wake("LoreManagerScene");
           this.events.emit("complete");
         }
@@ -149,23 +156,35 @@ export class GameScene extends Scene {
     }
   }
 
-  createBackground(): void {
-    this.add.image(0, 0, "backgroundSky").setOrigin(0, 0);
-    this.add.image(0, 0, "backgroundCity").setOrigin(0, 0);
+  createBackgrounds(): void {
+    const backgroundSkyFrame = this.textures.getFrame("backgroundSky");
+    this._backgroundSky = this.add.tileSprite(0, 0, backgroundSkyFrame.width, backgroundSkyFrame.height, backgroundSkyFrame.texture).setOrigin(0, 0);
+
+    const backgroundCityFrame = this.textures.getFrame("backgroundCity");
+    this._backgroundCity = this.add.tileSprite(0, 0, backgroundCityFrame.width, backgroundCityFrame.height, backgroundCityFrame.texture).setOrigin(0, 0);
+  }
+  updateBackgrounds(): void {
+    this._backgroundSky.x = this.cameras.main.scrollX - 100;
+    this._backgroundSky.tilePositionX -= 1;
+
+    this._backgroundCity.x = this.cameras.main.scrollX;
+    this._backgroundCity.tilePositionX = this.cameras.main.scrollX * .4;
   }
 
   createMap(): void {
-    this.createGround();
+    this.levelManager = new LevelManager(this, {
+      createGround: this.createGround.bind(this),
+      createOil: this.createOil.bind(this),
+      createRobot: this.createRobot.bind(this),
+      createDrone: this.createDrone.bind(this),
+    });
+    this.levelManager.init();
   }
 
-  createGround(): void {
+  initGround(): void {
     this.groundGroup = this.physics.add.staticGroup();
-
-    this.spawnGround({ x: 0, y: this.scale.height }, { x: 5, y: 1 });
-
-    this.spawnGround({ x: 300 * 6, y: this.scale.height });
   }
-  spawnGround(pos: Types.Math.Vector2Like, scale?: Types.Math.Vector2Like): void {
+  createGround(pos: Types.Math.Vector2Like, scale?: Types.Math.Vector2Like): void {
     (this.groundGroup.create(pos.x, pos.y, "ground") as Physics.Arcade.Image)
       .setOrigin(0, 1)
       .setScale(scale?.x ?? 1, scale?.y ?? 1)
@@ -204,11 +223,6 @@ export class GameScene extends Scene {
     this.createInfo();
 
     await this.playBeetle();
-
-    this.createRobots();
-    this.createDrones();
-
-    this.createOil();
   }
 
   initUserInput(): void {
@@ -289,19 +303,19 @@ export class GameScene extends Scene {
       obj.destroy();
     });
 
-    const magnetPickup = new MagnetPickup(this, 500, 500);
-    this.physics.add.overlap(this.player, magnetPickup, async (player, obj) => {
-      (obj as MagnetPickup).disableBody();
-      await this.player.upgrade(EUpgradeType.MAGNET);
-      obj.destroy();
-    });
+    // const magnetPickup = new MagnetPickup(this, 500, 500);
+    // this.physics.add.overlap(this.player, magnetPickup, async (player, obj) => {
+    //   (obj as MagnetPickup).disableBody();
+    //   await this.player.upgrade(EUpgradeType.MAGNET);
+    //   obj.destroy();
+    // });
 
-    const coilPickup = new CoilPickup(this, 1000, 500);
-    this.physics.add.overlap(this.player, coilPickup, async (player, obj) => {
-      (obj as CoilPickup).disableBody();
-      await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
-      obj.destroy();
-    });
+    // const coilPickup = new CoilPickup(this, 1000, 500);
+    // this.physics.add.overlap(this.player, coilPickup, async (player, obj) => {
+    //   (obj as CoilPickup).disableBody();
+    //   await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
+    //   obj.destroy();
+    // });
   }
 
   playPlayerForceFiled(obj1: Types.Physics.Arcade.ImageWithDynamicBody, obj2: Types.Physics.Arcade.ImageWithDynamicBody,): void {
@@ -348,17 +362,15 @@ export class GameScene extends Scene {
   createCamera(): void {
     this.physics.world.setBounds(0, 0, 3840, 1080);
     this.cameras.main.setBounds(0, 0, 3840, 1080);
-    this.cameras.main.startFollow(this.player, true, .06, 0);
+    this.cameras.main.startFollow(this.player, true, .06, 0, -200);
   }
 
   initRobots(): void {
     this.robotManager = new RobotManager(this.physics.world, this);
   }
 
-  createRobots(): void {
-    for (let i = 1; i <= 2; i++) {
-      this.robotManager.populate({ x: i * 800, y: 500 });
-    }
+  createRobot(pos: Types.Math.Vector2Like): void {
+    this.robotManager.populate(pos);
   }
 
   initDrones(): void {
@@ -366,10 +378,8 @@ export class GameScene extends Scene {
       runChildUpdate: true,
     });
   }
-  createDrones(): void {
-    for (let i = 1; i <= 2; i++) {
-      this.droneGroup.add(new Drone(this, i * 800, 500));
-    }
+  createDrone(pos: Types.Math.Vector2Like): void {
+    this.droneGroup.add(new Drone(this, pos.x, pos.y));
   }
 
   initOil(): void {
@@ -377,10 +387,8 @@ export class GameScene extends Scene {
       classType: OilPickup,
     });
   }
-  createOil(): void {
-    for (let i = 1; i <= 2; i++) {
-      this.oilPickupGroup.create(i * 400, 500);
-    }
+  createOil(pos: Types.Math.Vector2Like): void {
+    this.oilPickupGroup.create(pos.x, pos.y);
   }
 
   createInfo(): void {
@@ -407,12 +415,48 @@ export class GameScene extends Scene {
     }
 
     this.player.update(time, delta);
+    this.levelManager.update({ x: this.player.x, y: this.player.y });
+
     this.robotManager.update(time, delta);
+
     this.updateInfo();
+
+    this.updateBackgrounds();
   }
 
   updateInfo(): void {
     this.oilText?.setText(`Oil: ${Math.ceil(this.player.oil.amount)}/${this.player.oil.max}`);
     this.hpText?.setText(`HP: ${Math.ceil(this.player.health.current)}/${this.player.health.max}`);
+  }
+
+  saveGame(): void {
+    const data = {
+      chunkIndex: this.levelManager.currentChunkIndex,
+      playerX: this.player.x,
+      playerY: this.player.y,
+      hp: this.player.health.current,
+      oil: this.player.oil.amount,
+    };
+
+    localStorage.setItem("save", JSON.stringify(data));
+  }
+  loadGame(): void {
+    return;
+    // const data = JSON.parse(localStorage.getItem("save")!);
+    const data = {
+      chunkIndex: 2,
+      playerX: 2 * this.scale.width,
+      playerY: 300,
+      hp: 100,
+      oil: 50,
+    };
+
+    this.player.setPosition(data.playerX, data.playerY);
+    this.player.health.current = data.hp;
+    this.player.oil.amount = data.oil;
+
+    for (let i = 0; i <= data.chunkIndex; i++) {
+      this.levelManager.spawnChunk(i);
+    }
   }
 }

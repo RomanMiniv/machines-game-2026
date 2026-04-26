@@ -50,6 +50,8 @@ export class Player extends Physics.Arcade.Image {
 
   private _moveSound: Sound.BaseSound | null;
 
+  private _isEndGame: boolean;
+
   constructor(scene: Scene, x: number, y: number, texture?: string | Textures.Texture, frame?: string | number) {
     super(scene, x, y, texture ?? "playerGear", frame);
     scene.add.existing(this);
@@ -205,6 +207,7 @@ export class Player extends Physics.Arcade.Image {
     this.setTint(0xff0000);
 
     if (this.health.current <= 0) {
+      this._isEndGame = true;
       this.scene.events.emit("gameOver", EGameStatus.LOST);
       return;
     }
@@ -225,6 +228,8 @@ export class Player extends Physics.Arcade.Image {
   }
 
   move(time: number, delta: number): void {
+    this.checkEndGame();
+
     let velocityHorizontalDirection: number = 0;
 
     if (this._inputControl.left.isDown) {
@@ -309,5 +314,18 @@ export class Player extends Physics.Arcade.Image {
     }
 
     this._forceField?.setPosition(this.x, this.y);
+  }
+
+  checkEndGame(): void {
+    if (this._isEndGame) {
+      return;
+    }
+
+    if (this.y + this.displayHeight / 2 >= this.scene.scale.height - 10) {
+      this.kill(this.health.max);
+    } else if (this.x + this.displayWidth >= this.scene.physics.world.bounds.width - this.scene.scale.width / 2) {
+      this._isEndGame = true;
+      this.scene.events.emit("gameOver", EGameStatus.WIN);
+    }
   }
 }

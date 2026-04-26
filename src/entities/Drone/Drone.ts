@@ -1,7 +1,7 @@
 import { Scene, Physics, Textures } from "phaser";
 
 export class Drone extends Physics.Arcade.Sprite {
-  private readonly _velocity: number = Phaser.Math.Between(50, 200);
+  private readonly _velocity: number = Phaser.Math.Between(100, 200);
 
   constructor(scene: Scene, x: number, y: number, texture?: string | Textures.Texture, frame?: string | number) {
     super(scene, x, y, texture ?? "drone", frame);
@@ -13,19 +13,22 @@ export class Drone extends Physics.Arcade.Sprite {
 
   initAnimations(): void {
     // TODO: rename textures
-    this.scene.anims.create({
-      key: "droneMove",
-      frames: this.anims.generateFrameNames("drone", {
-        prefix: "drone ",
-        start: 1,
-        end: 2,
-        suffix: ".png",
-      }),
-      frameRate: 18,
-      repeat: -1,
-    });
+    const animationName: string = "droneMove";
+    if (!this.scene.anims.exists(animationName)) {
+      this.scene.anims.create({
+        key: animationName,
+        frames: this.anims.generateFrameNames("drone", {
+          prefix: "drone ",
+          start: 1,
+          end: 2,
+          suffix: ".png",
+        }),
+        frameRate: 18,
+        repeat: -1,
+      });
+    }
 
-    this.play("droneMove");
+    this.play(animationName);
   }
 
   kill(): void {

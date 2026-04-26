@@ -34,19 +34,22 @@ export class PopupScene extends Scene {
 
   createEngeneer(): void {
     const engeneer = this.add.sprite(864, 632, "pauseEngineer");
-    this.anims.create({
-      key: "engineerWork",
-      frames: this.anims.generateFrameNames("pauseEngineer", {
-        prefix: "pauseEngineer",
-        start: 1,
-        end: 2,
-        suffix: ".png",
-      }),
-      frameRate: 1,
-      repeat: -1,
-    });
+    const animationName: string = "engineerWork";
+    if (!this.anims.exists(animationName)) {
+      this.anims.create({
+        key: animationName,
+        frames: this.anims.generateFrameNames("pauseEngineer", {
+          prefix: "pauseEngineer",
+          start: 1,
+          end: 2,
+          suffix: ".png",
+        }),
+        frameRate: 1,
+        repeat: -1,
+      });
+    }
 
-    engeneer.play("engineerWork");
+    engeneer.play(animationName);
   }
 
   createTitle(): void {
