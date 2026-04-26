@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import { MenuUI } from "../components/MenuUI";
+import { IMenuButton, MenuUI } from "../components/MenuUI";
 
 export class MenuScene extends Scene {
   protected menuUI: MenuUI;
@@ -12,14 +12,28 @@ export class MenuScene extends Scene {
 
   create() {
     const buttonSoundVolume: number = .3;
+
+    const data = JSON.parse(localStorage.getItem("autoSave")!);
+    const buttons: IMenuButton[] = [];
+    if (data?.playerX) {
+      buttons.push({
+        label: "CONTINUE",
+        onClick: () => {
+          this.sound.play("soundButton1", { volume: buttonSoundVolume });
+          this.scene.start("GameScene");
+        }
+      });
+    }
+
     this.menuUI = new MenuUI(this, {
       buttons: [
+        ...buttons,
         {
-          label: "PLAY",
+          label: "START NEW GAME",
           onClick: () => {
             this.sound.play("soundButton1", { volume: buttonSoundVolume });
+            localStorage.removeItem("autoSave");
             this.scene.start("LoreManagerScene");
-            // this.scene.start("GameScene");
           }
         },
         {

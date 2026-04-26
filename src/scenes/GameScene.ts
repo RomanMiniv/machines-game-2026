@@ -19,6 +19,7 @@ export enum EGameStatus {
 
 interface IInputControl {
   pause: Input.Keyboard.Key;
+  restart: Input.Keyboard.Key;
 }
 
 export class GameScene extends Scene {
@@ -32,6 +33,9 @@ export class GameScene extends Scene {
   groundGroup: Physics.Arcade.StaticGroup;
 
   oilPickupGroup: Physics.Arcade.StaticGroup;
+
+  magnetPickup: MagnetPickup;
+  coilPickup: CoilPickup;
 
   oilText: GameObjects.Text;
   hpText: GameObjects.Text;
@@ -109,6 +113,7 @@ export class GameScene extends Scene {
   }
 
   async setGameOver(gameStatus: EGameStatus): Promise<void> {
+    this.saveGame();
     switch (gameStatus) {
       case EGameStatus.LOST:
         {
@@ -131,6 +136,7 @@ export class GameScene extends Scene {
                   onClick: () => {
                     this.sound.play("soundButton1", { volume: buttonSoundVolume });
                     this.scene.stop("PopupScene");
+                    this.reset();
                     this.scene.start("MenuScene");
                   },
                 }
@@ -178,6 +184,8 @@ export class GameScene extends Scene {
       createOil: this.createOil.bind(this),
       createRobot: this.createRobot.bind(this),
       createDrone: this.createDrone.bind(this),
+      createMagnet: this.createMagnet.bind(this),
+      createCoil: this.createCoil.bind(this),
     });
     this.levelManager.init();
   }
@@ -229,6 +237,7 @@ export class GameScene extends Scene {
   initUserInput(): void {
     this._inputControl = (this.input.keyboard as Input.Keyboard.KeyboardPlugin).addKeys({
       pause: Input.Keyboard.KeyCodes.P,
+      restart: Input.Keyboard.KeyCodes.R,
     }) as IInputControl;
 
     this._inputControl.pause.on("down", () => {
@@ -261,6 +270,12 @@ export class GameScene extends Scene {
 
       this.scene.bringToTop("PopupScene");
       this.scene.launch("PopupScene", popupData);
+    });
+
+    this._inputControl.restart.on("down", () => {
+      this.reset();
+      this.saveGame();
+      this.scene.restart();
     });
   }
 
@@ -304,20 +319,6 @@ export class GameScene extends Scene {
       this.player.oil.collect((obj as OilPickup).amount);
       obj.destroy();
     });
-
-    const magnetPickup = new MagnetPickup(this, 500, 500);
-    this.physics.add.overlap(this.player, magnetPickup, async (player, obj) => {
-      (obj as MagnetPickup).disableBody();
-      await this.player.upgrade(EUpgradeType.MAGNET);
-      obj.destroy();
-    });
-
-    const coilPickup = new CoilPickup(this, 1000, 500);
-    this.physics.add.overlap(this.player, coilPickup, async (player, obj) => {
-      (obj as CoilPickup).disableBody();
-      await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
-      obj.destroy();
-    });
   }
 
   playPlayerForceFiled(obj1: Types.Physics.Arcade.ImageWithDynamicBody, obj2: Types.Physics.Arcade.ImageWithDynamicBody,): void {
@@ -347,10 +348,22 @@ export class GameScene extends Scene {
   }
 
   createPlayer(): void {
-    this.player = new Player(this, 100, 400).setAlpha(0);
+    const data = JSON.parse(localStorage.getItem("autoSave")!);
+    if (!data?.playerX) {
+      this.player = new Player(this, 100, 400).setAlpha(0);
+    } else {
+      this.player = new Player(this, 100, 400);
+    }
   }
 
   async playBeetle(): Promise<void> {
+    const data = JSON.parse(localStorage.getItem("autoSave")!);
+    if (data?.playerX) {
+      this.loadGame();
+      this.player.isStarted = true;
+      return;
+    }
+
     const beetle = new Beetle(this, -100, -100);
     this.player.setPosition(beetle.x, beetle.y).setAlpha(1);
     (this.player.body as Phaser.Physics.Arcade.Body).enable = false;
@@ -393,6 +406,31 @@ export class GameScene extends Scene {
     this.oilPickupGroup.create(pos.x, pos.y);
   }
 
+  createMagnet(pos: Types.Math.Vector2Like): void {
+    if (this.magnetPickup) {
+      return;
+    }
+
+    this.magnetPickup = new MagnetPickup(this, pos.x, pos.y);
+    this.physics.add.overlap(this.player, this.magnetPickup, async (player, obj) => {
+      (obj as MagnetPickup).disableBody();
+      await this.player.upgrade(EUpgradeType.MAGNET);
+      obj.destroy();
+    });
+  }
+  createCoil(pos: Types.Math.Vector2Like): void {
+    if (this.coilPickup) {
+      return;
+    }
+
+    this.coilPickup = new CoilPickup(this, pos.x, pos.y);
+    this.physics.add.overlap(this.player, this.coilPickup, async (player, obj) => {
+      (obj as CoilPickup).disableBody();
+      await this.player.upgrade(EUpgradeType.ELECTROMAGNET);
+      obj.destroy();
+    });
+  }
+
   createInfo(): void {
     const containerInfo = this.add.container(10, 10).setScrollFactor(0);
 
@@ -432,26 +470,27 @@ export class GameScene extends Scene {
   }
 
   saveGame(): void {
+    const storedData = JSON.parse(localStorage.getItem("autoSave")!);
+    const playerX: number = Math.max(storedData?.playerX ?? 0, this.player.x);
+
     const data = {
       chunkIndex: this.levelManager.currentChunkIndex,
-      playerX: this.player.x,
-      playerY: this.player.y,
-      hp: this.player.health.current,
-      oil: this.player.oil.amount,
+      playerX: this.levelManager.getCheckpointPos(playerX).x,
+      playerY: 600,
+      hp: this.player.health.max / 2,
+      oil: this.player.oil.max / 2,
     };
 
-    localStorage.setItem("save", JSON.stringify(data));
+    localStorage.setItem("autoSave", JSON.stringify(data));
   }
   loadGame(): void {
-    return;
-    // const data = JSON.parse(localStorage.getItem("save")!);
-    const data = {
-      chunkIndex: 2,
-      playerX: 2 * this.scale.width,
-      playerY: 300,
-      hp: 100,
-      oil: 50,
-    };
+    const data = JSON.parse(localStorage.getItem("autoSave")!);
+    if (!data) {
+      return;
+    }
+    if (!data.playerX) {
+      return;
+    }
 
     this.player.setPosition(data.playerX, data.playerY);
     this.player.health.current = data.hp;

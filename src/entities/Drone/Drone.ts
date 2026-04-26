@@ -80,6 +80,10 @@ export class Drone extends Physics.Arcade.Sprite {
     this.setAccelerationX(-this._velocity);
     this.setMaxVelocity(this._velocity);
 
+    if (!this.isMovable()) {
+      this.setMaxVelocity(0);
+    }
+
     if (this.scene.cameras.main.worldView.contains(this.x, this.y)) {
       this._moveSound?.resume();
     } else {
@@ -89,4 +93,20 @@ export class Drone extends Physics.Arcade.Sprite {
     this.setDrag(.01);
     this.setDamping(true);
   }
+
+  isMovable(): boolean {
+    const offsetX = this.displayWidth * 2;
+    const offsetY = this.displayHeight * 2;
+
+    const cameraView = this.scene.cameras.main.worldView;
+
+    const isInCameraView =
+      this.x >= cameraView.x - offsetX &&
+      this.x <= cameraView.x + cameraView.width + offsetX &&
+      this.y >= cameraView.y - offsetY &&
+      this.y <= cameraView.y + cameraView.height + offsetY;
+
+    return isInCameraView;
+  }
 }
+

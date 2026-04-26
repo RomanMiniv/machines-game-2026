@@ -9,13 +9,10 @@ export class Robot extends Physics.Arcade.Sprite {
 
   constructor(scene: Scene, x: number, y: number, texture?: string | Textures.Texture, frame?: string | number) {
     super(scene, x, y, texture ?? "robot", frame);
+    this.setScale(.7);
+
     scene.add.existing(this);
     scene.physics.add.existing(this);
-
-    // TODO: connect with game flow
-    this.scene.time.delayedCall(1000, () => {
-      this.attack();
-    });
   }
 
   init(lazerGroup: Physics.Arcade.Group) {
