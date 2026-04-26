@@ -258,7 +258,8 @@ export class Player extends Physics.Arcade.Image {
     const isFalling = body.velocity.y > 0;
     const isApex = !isGrounded && Math.abs(body.velocity.y) < 80;
 
-    if (this._inputControl.space.isDown && isGrounded) {
+    // if (this._inputControl.space.isDown && isGrounded) {
+    if (Phaser.Input.Keyboard.JustDown(this._inputControl.space) && isGrounded) {
       this.scene.sound.play("playerJumpSound", { volume: 1.5 });
       this.setVelocityY(this._jumpVelocity);
     }
