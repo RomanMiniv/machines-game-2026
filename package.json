@@ -1,9 +1,9 @@
 {
   "name": "game",
   "version": "1.0.0",
-  "author": "",
-  "description": "",
-  "license": "",
+  "author": "Roman Miniv",
+  "description": "Game - Machine part gear.",
+  "license": "GNU General Public License v3.0",
   "private": "true",
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
