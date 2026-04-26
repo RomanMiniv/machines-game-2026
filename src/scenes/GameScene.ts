@@ -112,7 +112,7 @@ export class GameScene extends Scene {
     switch (gameStatus) {
       case EGameStatus.LOST:
         {
-          const buttonSoundVolume: number = .4;
+          const buttonSoundVolume: number = .3;
           const popupData: IPopupData = {
             title: "Game Over",
             menuConfig: {
@@ -234,7 +234,7 @@ export class GameScene extends Scene {
     this._inputControl.pause.on("down", () => {
       this.scene.pause("GameScene");
 
-      const buttonSoundVolume: number = .4;
+      const buttonSoundVolume: number = .3;
       const popupData: IPopupData = {
         title: "Pause",
         menuConfig: {
@@ -300,7 +300,7 @@ export class GameScene extends Scene {
     // pickups
 
     this.physics.add.overlap(this.player, this.oilPickupGroup, (player, obj) => {
-      this.sound.play("oilDropSound", { volume: .8 });
+      this.sound.play("oilDropSound", { volume: .6 });
       this.player.oil.collect((obj as OilPickup).amount);
       obj.destroy();
     });

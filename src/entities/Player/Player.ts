@@ -241,7 +241,7 @@ export class Player extends Physics.Arcade.Image {
     }
     if (velocityHorizontalDirection !== 0) {
       if (!this._moveSound || !this._moveSound.isPlaying) {
-        this._moveSound = this.scene.sound.add("playerMoveSound", { loop: true });
+        this._moveSound = this.scene.sound.add("playerMoveSound", { loop: true, volume: 1.2, });
         this._moveSound.play();
       }
     } else {
@@ -260,7 +260,7 @@ export class Player extends Physics.Arcade.Image {
     const isApex = !isGrounded && Math.abs(body.velocity.y) < 80;
 
     if (this._inputControl.space.isDown && isGrounded) {
-      this.scene.sound.play("playerJumpSound", { volume: 1.6 });
+      this.scene.sound.play("playerJumpSound", { volume: 1.5 });
       this.setVelocityY(this._jumpVelocity);
     }
 

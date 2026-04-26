@@ -11,7 +11,7 @@ export class MenuScene extends Scene {
   }
 
   create() {
-    const buttonSoundVolume: number = .4;
+    const buttonSoundVolume: number = .3;
     this.menuUI = new MenuUI(this, {
       buttons: [
         {
